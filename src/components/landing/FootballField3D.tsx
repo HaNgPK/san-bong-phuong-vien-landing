@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, ContactShadows, Sky } from '@react-three/drei';
+import { OrbitControls, ContactShadows, Sky, Loader } from '@react-three/drei';
 import * as THREE from 'three';
 
 const useFieldTexture = (length: number, width: number) => {
@@ -315,6 +315,14 @@ export default function FootballField3D({ length = 51, width = 32 }: { length?: 
         />
         <ContactShadows position={[0, -0.01, 0]} opacity={0.4} scale={100} blur={2} far={4.5} frames={1} resolution={512} />
       </Canvas>
+      
+      <Loader 
+        containerStyles={{ backgroundColor: '#f0f9ff' }}
+        innerStyles={{ backgroundColor: '#cbd5e1', height: '6px', width: '250px', borderRadius: '4px' }}
+        barStyles={{ backgroundColor: '#10b981', height: '6px', borderRadius: '4px' }}
+        dataStyles={{ color: '#047857', fontWeight: 'bold', fontSize: '14px', marginTop: '16px', fontFamily: 'sans-serif' }}
+        dataInterpolation={(p) => `Đang dựng mô hình 3D... ${p.toFixed(0)}%`}
+      />
       
       <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm text-white px-4 py-3 rounded-lg border border-white/10 shadow-lg pointer-events-none">
         <p className="font-bold text-lg text-emerald-400">Sân Bóng Phương Viên</p>
