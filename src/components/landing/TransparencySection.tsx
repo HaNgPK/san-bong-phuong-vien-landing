@@ -1,13 +1,16 @@
 import { useState, useMemo } from "react";
-import { Search, ArrowRight, Calendar, MessageCircle } from "lucide-react";
+import { Search, ArrowRight, Calendar, MessageCircle, Medal } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ALL_DONATIONS } from "@/data/mockData";
 import { formatCurrency, getCategoryColor } from "@/lib/format";
+import CertificateModal from "./CertificateModal";
 
 export default function TransparencySection() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDonation, setSelectedDonation] = useState<{name: string, amount: number} | null>(null);
 
   const filteredDonations = useMemo(() => {
     if (!searchQuery.trim()) return ALL_DONATIONS;
@@ -23,21 +26,40 @@ export default function TransparencySection() {
     <section id="transparency-section" className="py-12 md:py-16 bg-white border-y border-gray-100">
       <div className="container px-4 mx-auto max-w-5xl">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-8 gap-4 text-center md:text-left">
-          <div>
+          <div className="flex-1">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Sao Kê Đóng Góp</h2>
-            <p className="text-gray-500">Cập nhật tự động mọi khoản thu</p>
+            <p className="text-gray-500 mb-4 md:mb-0">Cập nhật tự động mọi khoản thu</p>
           </div>
-          <div className="relative w-full md:w-80 lg:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input 
-              type="text" 
-              placeholder="Tìm kiếm tên, nội dung..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-            />
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+            <Button 
+              onClick={() => {
+                setSelectedDonation(null);
+                setIsModalOpen(true);
+              }}
+              className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white font-bold shadow-md shadow-yellow-200/50"
+            >
+              <Medal className="w-4 h-4 mr-2" />
+              Tạo Chứng Nhận
+            </Button>
+            <div className="relative w-full sm:w-64 lg:w-80">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input 
+                type="text" 
+                placeholder="Tìm kiếm tên, nội dung..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+              />
+            </div>
           </div>
         </div>
+
+        <CertificateModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          initialName={selectedDonation?.name}
+          initialAmount={selectedDonation?.amount}
+        />
 
         <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-2xl bg-gray-50/50">
           
@@ -52,6 +74,7 @@ export default function TransparencySection() {
                     <TableHead className="font-bold text-gray-700">Người gửi</TableHead>
                     <TableHead className="font-bold text-gray-700">Lời nhắn</TableHead>
                     <TableHead className="text-right font-bold text-gray-700">Số tiền</TableHead>
+                    <TableHead className="w-[50px]"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -71,11 +94,25 @@ export default function TransparencySection() {
                         <TableCell className="text-right font-bold text-emerald-600 text-lg">
                           +{formatCurrency(donation.amount)}
                         </TableCell>
+                        <TableCell>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            title="Tạo chứng nhận"
+                            onClick={() => {
+                              setSelectedDonation({ name: donation.name, amount: donation.amount });
+                              setIsModalOpen(true);
+                            }}
+                            className="text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 h-8 w-8 rounded-full"
+                          >
+                            <Medal className="w-4 h-4" />
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-10 text-gray-500">
+                      <TableCell colSpan={6} className="text-center py-10 text-gray-500">
                         Không tìm thấy kết quả nào cho "{searchQuery}"
                       </TableCell>
                     </TableRow>
@@ -113,6 +150,18 @@ export default function TransparencySection() {
                         "{donation.message}"
                       </div>
                     )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedDonation({ name: donation.name, amount: donation.amount });
+                        setIsModalOpen(true);
+                      }}
+                      className="w-full mt-1 border-yellow-200 text-yellow-700 hover:bg-yellow-50 flex items-center justify-center gap-2"
+                    >
+                      <Medal className="w-4 h-4" />
+                      Nhận Chứng Nhận
+                    </Button>
                   </div>
                 </div>
               ))

@@ -22,6 +22,7 @@ export default function PaymentSection() {
         <div className="text-center mb-8 md:mb-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Thông Tin Đóng Góp</h2>
           <p className="text-emerald-100 text-sm md:text-base">Quét mã QR hoặc chuyển khoản thủ công theo thông tin bên dưới.</p>
+          <p className="text-yellow-400 font-bold mt-2 text-sm uppercase tracking-wider">(Đang trong trạng thái demo)</p>
         </div>
 
         <div className="bg-white text-gray-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
