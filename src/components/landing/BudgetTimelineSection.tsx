@@ -1,4 +1,4 @@
-import { Banknote, Calendar, CheckCircle2, Clock, Trophy, Sparkles, Activity } from "lucide-react";
+import { Banknote, Calendar, Clock, Trophy, Sparkles, Activity } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BUDGET_BREAKDOWN, FUNDING_GOAL } from "@/data/mockData";
 import { formatCurrency } from "@/lib/format";
