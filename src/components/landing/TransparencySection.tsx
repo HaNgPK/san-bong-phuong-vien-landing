@@ -64,19 +64,18 @@ export default function TransparencySection() {
         <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-2xl bg-gray-50/50">
           
           {/* GIAO DIỆN DESKTOP (TABLE) */}
-          <div className="hidden md:block overflow-hidden">
-            <div className="min-w-[700px] max-h-[600px] overflow-y-auto custom-scrollbar">
-              <Table className="bg-white">
-                <TableHeader className="bg-gray-50 sticky top-0 z-10 shadow-sm">
-                  <TableRow>
-                    <TableHead className="w-[120px] font-bold text-gray-700">Ngày</TableHead>
-                    <TableHead className="w-[140px] font-bold text-gray-700">Phân loại</TableHead>
-                    <TableHead className="font-bold text-gray-700">Người gửi</TableHead>
-                    <TableHead className="font-bold text-gray-700">Lời nhắn</TableHead>
-                    <TableHead className="text-right font-bold text-gray-700">Số tiền</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
-                  </TableRow>
-                </TableHeader>
+          <div className="hidden md:block [&>div]:max-h-[600px] [&>div]:overflow-y-auto [&>div]:custom-scrollbar">
+            <Table className="bg-white min-w-[700px]">
+              <TableHeader className="bg-gray-50 sticky top-0 z-10 shadow-sm">
+                <TableRow>
+                  <TableHead className="w-[120px] font-bold text-gray-700 bg-gray-50">Ngày</TableHead>
+                  <TableHead className="w-[140px] font-bold text-gray-700 bg-gray-50">Phân loại</TableHead>
+                  <TableHead className="font-bold text-gray-700 bg-gray-50">Người gửi</TableHead>
+                  <TableHead className="font-bold text-gray-700 bg-gray-50">Lời nhắn</TableHead>
+                  <TableHead className="text-right font-bold text-gray-700 bg-gray-50">Số tiền</TableHead>
+                  <TableHead className="w-[50px] bg-gray-50"></TableHead>
+                </TableRow>
+              </TableHeader>
                 <TableBody>
                   {filteredDonations.length > 0 ? (
                     filteredDonations.map((donation) => (
@@ -119,7 +118,6 @@ export default function TransparencySection() {
                   )}
                 </TableBody>
               </Table>
-            </div>
           </div>
 
           {/* GIAO DIỆN MOBILE (CARDS) */}
@@ -179,23 +177,6 @@ export default function TransparencySection() {
           </div>
         </Card>
       </div>
-      <style>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f1f5f9; 
-          border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #cbd5e1; 
-          border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #94a3b8; 
-        }
-      `}</style>
     </section>
   );
 }
