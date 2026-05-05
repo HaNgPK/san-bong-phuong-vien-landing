@@ -42,10 +42,10 @@ export default function TransparencySection() {
         <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-2xl bg-gray-50/50">
           
           {/* GIAO DIỆN DESKTOP (TABLE) */}
-          <div className="hidden md:block overflow-x-auto">
-            <div className="min-w-[700px]">
+          <div className="hidden md:block overflow-hidden">
+            <div className="min-w-[700px] max-h-[600px] overflow-y-auto custom-scrollbar">
               <Table className="bg-white">
-                <TableHeader className="bg-gray-50">
+                <TableHeader className="bg-gray-50 sticky top-0 z-10 shadow-sm">
                   <TableRow>
                     <TableHead className="w-[120px] font-bold text-gray-700">Ngày</TableHead>
                     <TableHead className="w-[140px] font-bold text-gray-700">Phân loại</TableHead>
@@ -86,7 +86,7 @@ export default function TransparencySection() {
           </div>
 
           {/* GIAO DIỆN MOBILE (CARDS) */}
-          <div className="md:hidden flex flex-col gap-3 p-3">
+          <div className="md:hidden flex flex-col gap-3 p-3 max-h-[600px] overflow-y-auto custom-scrollbar">
             {filteredDonations.length > 0 ? (
               filteredDonations.map((donation) => (
                 <div key={donation.id} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-3">
@@ -130,6 +130,23 @@ export default function TransparencySection() {
           </div>
         </Card>
       </div>
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f5f9; 
+          border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1; 
+          border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8; 
+        }
+      `}</style>
     </section>
   );
 }

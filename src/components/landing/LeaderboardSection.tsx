@@ -73,9 +73,9 @@ export default function LeaderboardSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 max-w-5xl mx-auto px-4 md:px-0">
-          <FriendlyCard donor={currentLeaderboardData.find(d => d.rank === 2)} />
-          <FriendlyCard donor={currentLeaderboardData.find(d => d.rank === 1)} />
-          <FriendlyCard donor={currentLeaderboardData.find(d => d.rank === 3)} />
+          <div className="order-2 md:order-1"><FriendlyCard donor={currentLeaderboardData.find(d => d.rank === 2)} /></div>
+          <div className="order-1 md:order-2"><FriendlyCard donor={currentLeaderboardData.find(d => d.rank === 1)} /></div>
+          <div className="order-3 md:order-3"><FriendlyCard donor={currentLeaderboardData.find(d => d.rank === 3)} /></div>
         </div>
       </div>
     </section>
