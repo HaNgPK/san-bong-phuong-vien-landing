@@ -1,4 +1,4 @@
-export const FUNDING_GOAL = 460000000;
+export const FUNDING_GOAL = 459836000;
 export const CURRENT_RAISED = 207000000;
 
 export const DONORS_BUSINESS = [
@@ -54,9 +54,9 @@ export const ALL_DONATIONS = [
 ];
 
 export const BUDGET_BREAKDOWN = [
-  { item: "Hệ thống thảm cỏ nhân tạo", amount: 300000000, color: "bg-emerald-500" },
-  { item: "Hệ thống chiếu sáng (Cột, Đèn LED)", amount: 60000000, color: "bg-blue-500" },
-  { item: "Hệ thống lưới bao & Cầu môn", amount: 100000000, color: "bg-orange-500" },
+  { item: "Phần nền hạ (San lấp, lu lèn, đá base...)", amount: 157916000, color: "bg-stone-500" },
+  { item: "Hệ thống mặt cỏ nhân tạo (Chuẩn FIFA)", amount: 204000000, color: "bg-emerald-500" },
+  { item: "Vật tư phụ & Nhân công thi công", amount: 97920000, color: "bg-amber-500" },
 ];
 
 export const BANK_DETAILS = {
