@@ -69,8 +69,14 @@ export default function CertificateModal({ isOpen, onClose, initialName = "", in
       const canvas = await html2canvas(certificateRef.current, {
         scale: 2, 
         useCORS: true,
-        backgroundColor: "#ffffff",
+        backgroundColor: "#064e3b",
         logging: false,
+        onclone: (clonedDoc) => {
+          const scaler = clonedDoc.getElementById('certificate-scaler');
+          if (scaler) {
+            scaler.style.transform = 'scale(1)';
+          }
+        }
       });
       const image = canvas.toDataURL("image/png", 1.0);
       const link = document.createElement("a");
@@ -167,14 +173,17 @@ export default function CertificateModal({ isOpen, onClose, initialName = "", in
           
           {/* Certificate Scaler Wrapper */}
           <div 
+            id="certificate-scaler"
             style={{ 
               width: RATIOS[ratio].width, 
               height: RATIOS[ratio].height,
+              minWidth: RATIOS[ratio].width,
+              minHeight: RATIOS[ratio].height,
               transform: `scale(${scale})`,
               transformOrigin: 'center center',
               transition: 'all 0.3s ease-out'
             }}
-            className="flex items-center justify-center relative"
+            className="flex items-center justify-center relative shrink-0"
           >
             {/* The Actual Certificate */}
             <div 
@@ -198,33 +207,33 @@ export default function CertificateModal({ isOpen, onClose, initialName = "", in
 
                 <div className="relative z-10 w-full h-full flex flex-col justify-center items-center px-10 py-4 text-center">
                   
-                  <div className="flex flex-col items-center mb-1">
-                    <Medal className="w-10 h-10 md:w-12 md:h-12 text-[#d4af37] mb-1" strokeWidth={1.5} />
-                    <h1 className="text-3xl md:text-4xl font-black text-emerald-900 uppercase mb-0 tracking-normal">
+                  <div className="flex flex-col items-center mb-2">
+                    <Medal className="w-12 h-12 text-[#d4af37] mb-2" strokeWidth={1.5} />
+                    <h1 className="text-4xl font-black text-emerald-900 uppercase mb-0 tracking-normal">
                       Bằng Ghi Nhận
                     </h1>
-                    <div className="w-24 h-[2px] bg-[#d4af37] mt-2 mb-1"></div>
-                    <p className="text-[10px] md:text-xs font-bold text-[#d4af37] uppercase tracking-widest mt-1">
+                    <div className="w-32 h-[2px] bg-[#d4af37] mt-3 mb-2"></div>
+                    <p className="text-sm font-bold text-[#d4af37] uppercase tracking-widest mt-1">
                       Tấm Lòng Vàng
                     </p>
                   </div>
 
-                  <div className="flex flex-col items-center w-full max-w-lg mt-2 mb-1 md:mt-3 md:mb-2">
-                    <p className="text-gray-600 mb-0 italic text-sm md:text-base">Trân trọng cảm ơn</p>
+                  <div className="flex flex-col items-center w-full max-w-lg mt-4 mb-3">
+                    <p className="text-gray-600 mb-1 italic text-base">Trân trọng cảm ơn</p>
                     
-                    <h2 className={`font-black text-emerald-900 uppercase ${name.length > 20 ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'} px-6 py-1 border-b-2 border-[#d4af37]/30 w-full`}>
+                    <h2 className={`font-black text-emerald-900 uppercase ${name.length > 20 ? 'text-2xl' : 'text-3xl'} px-6 py-2 border-b-2 border-[#d4af37]/30 w-full`}>
                       {name || "Tên Người Ủng Hộ"}
                     </h2>
                   </div>
 
-                  <div className="flex flex-col items-center my-1">
-                    <p className="text-gray-700 mb-1 text-xs md:text-sm">Đã chung tay ủng hộ số tiền</p>
-                    <p className="text-xl md:text-2xl font-black text-[#d4af37] bg-yellow-50/60 px-6 py-1.5 rounded-lg border border-[#d4af37]/20 shadow-sm">
+                  <div className="flex flex-col items-center my-3">
+                    <p className="text-gray-700 mb-2 text-sm">Đã chung tay ủng hộ số tiền</p>
+                    <p className="text-2xl font-black text-[#d4af37] bg-yellow-50/60 px-8 py-2 rounded-xl border border-[#d4af37]/20 shadow-sm">
                       {Number(amount) > 0 ? formatCurrency(Number(amount)) : "0 VNĐ"}
                     </p>
                   </div>
 
-                  <p className="text-[10px] md:text-xs text-gray-700 max-w-[95%] md:max-w-[85%] mt-2 mb-0 leading-relaxed">
+                  <p className="text-sm text-gray-700 max-w-[85%] mt-4 mb-0 leading-relaxed">
                     Sự đóng góp của Quý vị là nguồn động lực to lớn giúp dự án cải tạo Sân Bóng Phương Viên sớm hoàn thành, 
                     góp phần thúc đẩy phong trào thể dục thể thao và xây dựng một sân chơi lành mạnh cho cộng đồng.
                   </p>

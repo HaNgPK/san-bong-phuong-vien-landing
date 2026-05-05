@@ -6,6 +6,7 @@ import FootballFieldSection from "./components/landing/FootballFieldSection";
 import LeaderboardSection from "./components/landing/LeaderboardSection";
 import TransparencySection from "./components/landing/TransparencySection";
 import BudgetTimelineSection from "./components/landing/BudgetTimelineSection";
+import SchedulePlanSection from "./components/landing/SchedulePlanSection";
 import PaymentSection from "./components/landing/PaymentSection";
 import Footer from "./components/landing/Footer";
 import { motion, Variants } from "framer-motion";
@@ -39,6 +40,10 @@ export default function App() {
 
       <ScrollReveal>
         <FootballFieldSection />
+      </ScrollReveal>
+
+      <ScrollReveal>
+        <SchedulePlanSection />
       </ScrollReveal>
 
       <ScrollReveal>
