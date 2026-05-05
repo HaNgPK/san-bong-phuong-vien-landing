@@ -8,24 +8,59 @@ import TransparencySection from "./components/landing/TransparencySection";
 import BudgetTimelineSection from "./components/landing/BudgetTimelineSection";
 import PaymentSection from "./components/landing/PaymentSection";
 import Footer from "./components/landing/Footer";
+import { motion } from "framer-motion";
+
+const fadeUpVariant = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+  }
+};
+
+const ScrollReveal = ({ children }: { children: React.ReactNode }) => (
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true, margin: "-100px" }}
+    variants={fadeUpVariant}
+  >
+    {children}
+  </motion.div>
+);
 
 export default function App() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-emerald-200 overflow-x-hidden">
       <Header />
       <HeroSection />
-      
-      {/* Thêm phần chạy ngang text ở giữa */}
       <SponsorMarquee />
 
-      <FootballFieldSection />
+      <ScrollReveal>
+        <FootballFieldSection />
+      </ScrollReveal>
 
-      <TournamentGallerySection />
+      <ScrollReveal>
+        <TournamentGallerySection />
+      </ScrollReveal>
 
-      <LeaderboardSection />
-      <TransparencySection />
-      <BudgetTimelineSection />
-      <PaymentSection />
+      <ScrollReveal>
+        <LeaderboardSection />
+      </ScrollReveal>
+      
+      <ScrollReveal>
+        <TransparencySection />
+      </ScrollReveal>
+      
+      <ScrollReveal>
+        <BudgetTimelineSection />
+      </ScrollReveal>
+      
+      <ScrollReveal>
+        <PaymentSection />
+      </ScrollReveal>
+      
       <Footer />
     </div>
   );
