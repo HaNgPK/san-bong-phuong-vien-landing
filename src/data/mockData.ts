@@ -67,12 +67,18 @@ export const BANK_DETAILS = {
 
 // Danh sách ảnh giải đấu (Đã lấy trực tiếp từ Album ImgBB của bạn)
 export const TOURNAMENT_IMAGES = [
-  "https://i.ibb.co/zWtT1Vys/DAI94521.jpg",
-  "https://i.ibb.co/bMwHX750/DAI94546-1.jpg",
-  "https://i.ibb.co/jkthTbpj/DAI95804.jpg",
-  "https://i.ibb.co/8FtjnTh/DAI95758.jpg",
-  "https://i.ibb.co/2YmBgsKT/DAI95765.jpg",
-  "https://i.ibb.co/1fMDZMM1/DAI98108.jpg",
-  "https://i.ibb.co/7NLWRVjt/DAI98120.jpg",
-  "https://i.ibb.co/99jmcDKd/DAI97542.jpg"
+  "https://i.ibb.co/bjGMx5S1/DAI94521.jpg",
+  "https://i.ibb.co/DHcGQLfJ/DAI94546-1.jpg",
+  "https://i.ibb.co/Kxn6Xb18/DAI95804.jpg",
+  "https://i.ibb.co/czVNKMm/DAI95758.jpg",
+  "https://i.ibb.co/Wpq1gPKL/DAI95765.jpg",
+  "https://i.ibb.co/27SDqSSx/DAI98108.jpg",
+  "https://i.ibb.co/KzSqL7bx/DAI98120.jpg",
+  "https://i.ibb.co/ynJmd9vx/DAI97542.jpg",
+  "https://i.ibb.co/WNMhZg20/682420626-122108516570882605-922693745172358632-n.jpg",
+  "https://i.ibb.co/dTxgj8D/647299636-2400221127075331-4888226803337103169-n.jpg",
+  "https://i.ibb.co/GfWZ2KLs/641591912-1236199518643076-7943011371465466531-n.jpg",
+  "https://i.ibb.co/27gkjC76/640565163-1236199565309738-5188919279278337313-n.jpg",
+  "https://i.ibb.co/GvM16VM1/641588174-1236199538643074-211545830101920673-n.jpg",
+  "https://i.ibb.co/xqH9fM81/641574828-1236199548643073-8555782169534233516-n.jpg"
 ];
