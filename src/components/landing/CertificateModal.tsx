@@ -54,8 +54,6 @@ export default function CertificateModal({ isOpen, onClose, initialName = "", in
       }
     };
     
-    // Initial calculate and set up resize listener
-    // Small timeout to ensure DOM is fully rendered before calculating
     setTimeout(updateScale, 50);
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
@@ -67,10 +65,9 @@ export default function CertificateModal({ isOpen, onClose, initialName = "", in
     if (!certificateRef.current) return;
     setIsDownloading(true);
     
-    // Temporarily reset transform on wrapper if needed, though html2canvas on inner ref usually ignores parent transform
     try {
       const canvas = await html2canvas(certificateRef.current, {
-        scale: 2, // High quality
+        scale: 2, 
         useCORS: true,
         backgroundColor: "#ffffff",
         logging: false,
@@ -167,9 +164,6 @@ export default function CertificateModal({ isOpen, onClose, initialName = "", in
 
         {/* Cột phải: Preview Chứng nhận */}
         <div ref={containerRef} className="w-full md:w-2/3 h-[400px] md:h-auto bg-gray-200 flex items-center justify-center overflow-hidden relative">
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-10">
-            {/* Watermark/Pattern for background */}
-          </div>
           
           {/* Certificate Scaler Wrapper */}
           <div 
@@ -185,66 +179,69 @@ export default function CertificateModal({ isOpen, onClose, initialName = "", in
             {/* The Actual Certificate */}
             <div 
               ref={certificateRef}
-              className="w-full h-full shrink-0 relative bg-white overflow-hidden shadow-2xl border-[12px] border-double border-[#d4af37] flex flex-col justify-center items-center"
-              style={{ 
-                backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23f0fdf4\' fill-opacity=\'0.8\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M0 0h100v100H0V0zm50 50c-27.614 0-50 22.386-50 50h100c0-27.614-22.386-50-50-50z\'/%3E%3C/g%3E%3C/svg%3E")',
-                backgroundSize: '100px 100px'
-              }}
+              className="w-full h-full shrink-0 relative bg-[#064e3b] p-3 flex flex-col justify-center items-center"
+              style={{ fontFamily: '"Times New Roman", Times, serif' }}
             >
-              {/* Inner border */}
-              <div className="absolute inset-2 border-2 border-[#d4af37] opacity-40"></div>
-              <div className="absolute inset-3 border border-[#d4af37] opacity-20"></div>
-
-              {/* Corner ornaments */}
-              <div className="absolute top-4 left-4 w-12 h-12 border-t-4 border-l-4 border-[#166534]"></div>
-              <div className="absolute top-4 right-4 w-12 h-12 border-t-4 border-r-4 border-[#166534]"></div>
-              <div className="absolute bottom-4 left-4 w-12 h-12 border-b-4 border-l-4 border-[#166534]"></div>
-              <div className="absolute bottom-4 right-4 w-12 h-12 border-b-4 border-r-4 border-[#166534]"></div>
-
-              {/* Glowing background behind text */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-white/90 blur-3xl rounded-full z-0"></div>
-
-              <div className="relative z-10 w-full h-full flex flex-col justify-center items-center px-12 py-8 text-center gap-4">
+              <div className="w-full h-full bg-white relative flex flex-col justify-center items-center border-[6px] border-double border-[#d4af37] overflow-hidden">
                 
-                <div className="flex flex-col items-center mb-2">
-                  <Medal className="w-16 h-16 text-[#d4af37] mb-3" strokeWidth={1.5} />
-                  <h1 className="text-4xl md:text-5xl font-black text-emerald-900 uppercase mb-1 font-serif">
-                    Bằng Ghi Nhận
-                  </h1>
-                  <div className="w-32 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mt-2"></div>
-                  <p className="text-sm font-bold text-[#d4af37] uppercase mt-3">
-                    Tấm Lòng Vàng
-                  </p>
+                {/* Sports Background Pattern (Subtle Soccer Field elements) */}
+                <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-[0.03]">
+                  {/* Center Circle */}
+                  <div className="absolute w-[40%] aspect-square rounded-full border-[8px] border-emerald-900"></div>
+                  {/* Center Line */}
+                  <div className="absolute w-[8px] h-full bg-emerald-900 left-1/2 -translate-x-1/2"></div>
+                  {/* Penalty Box Left */}
+                  <div className="absolute left-0 w-[15%] h-[40%] border-y-[8px] border-r-[8px] border-emerald-900"></div>
+                  {/* Penalty Box Right */}
+                  <div className="absolute right-0 w-[15%] h-[40%] border-y-[8px] border-l-[8px] border-emerald-900"></div>
                 </div>
 
-                <div className="flex flex-col items-center w-full max-w-lg my-2">
-                  <p className="text-gray-600 mb-3 italic text-lg font-serif">Trân trọng cảm ơn</p>
+                <div className="relative z-10 w-full h-full flex flex-col justify-center items-center px-10 py-4 text-center">
                   
-                  <h2 className={`font-black text-emerald-900 uppercase ${name.length > 20 ? 'text-2xl' : 'text-4xl'} px-4 py-2 border-b-2 border-[#d4af37]/30 w-full`}>
-                    {name || "Tên Người Ủng Hộ"}
-                  </h2>
-                </div>
+                  <div className="flex flex-col items-center mb-1">
+                    <Medal className="w-10 h-10 md:w-12 md:h-12 text-[#d4af37] mb-1" strokeWidth={1.5} />
+                    <h1 className="text-3xl md:text-4xl font-black text-emerald-900 uppercase mb-0 tracking-normal">
+                      Bằng Ghi Nhận
+                    </h1>
+                    <div className="w-24 h-[2px] bg-[#d4af37] mt-2 mb-1"></div>
+                    <p className="text-[10px] md:text-xs font-bold text-[#d4af37] uppercase tracking-widest mt-1">
+                      Tấm Lòng Vàng
+                    </p>
+                  </div>
 
-                <div className="flex flex-col items-center">
-                  <p className="text-gray-700 mb-2 font-serif">Đã chung tay ủng hộ số tiền</p>
-                  <p className="text-3xl font-black text-[#d4af37] bg-yellow-50/80 px-6 py-2 rounded-xl border border-yellow-200/50 shadow-sm">
-                    {Number(amount) > 0 ? formatCurrency(Number(amount)) : "0 VNĐ"}
+                  <div className="flex flex-col items-center w-full max-w-lg mt-2 mb-1 md:mt-3 md:mb-2">
+                    <p className="text-gray-600 mb-0 italic text-sm md:text-base">Trân trọng cảm ơn</p>
+                    
+                    <h2 className={`font-black text-emerald-900 uppercase ${name.length > 20 ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'} px-6 py-1 border-b-2 border-[#d4af37]/30 w-full`}>
+                      {name || "Tên Người Ủng Hộ"}
+                    </h2>
+                  </div>
+
+                  <div className="flex flex-col items-center my-1">
+                    <p className="text-gray-700 mb-1 text-xs md:text-sm">Đã chung tay ủng hộ số tiền</p>
+                    <p className="text-xl md:text-2xl font-black text-[#d4af37] bg-yellow-50/60 px-6 py-1.5 rounded-lg border border-[#d4af37]/20 shadow-sm">
+                      {Number(amount) > 0 ? formatCurrency(Number(amount)) : "0 VNĐ"}
+                    </p>
+                  </div>
+
+                  <p className="text-[10px] md:text-xs text-gray-700 max-w-[95%] md:max-w-[85%] mt-2 mb-0 leading-relaxed">
+                    Sự đóng góp của Quý vị là nguồn động lực to lớn giúp dự án cải tạo Sân Bóng Phương Viên sớm hoàn thành, 
+                    góp phần thúc đẩy phong trào thể dục thể thao và xây dựng một sân chơi lành mạnh cho cộng đồng.
                   </p>
+
+                  {/* Date & Signature block - Hidden per user request */}
+                  {/*
+                  <div className="absolute bottom-3 right-6 md:bottom-4 md:right-8 flex flex-col items-center bg-white/80 px-2 py-1 rounded">
+                    <p className="text-[9px] md:text-[10px] text-gray-600 italic mb-0.5">
+                      Ngày {new Date().getDate()} tháng {new Date().getMonth() + 1} năm {new Date().getFullYear()}
+                    </p>
+                    <p className="text-[10px] md:text-xs font-bold uppercase text-emerald-900 tracking-wider">
+                      Ban Quản Lý Dự Án
+                    </p>
+                  </div>
+                  */}
+
                 </div>
-
-                <p className="text-sm text-gray-600 max-w-[85%] mt-4 leading-relaxed font-medium">
-                  Sự đóng góp của Quý vị là nguồn động lực to lớn giúp dự án cải tạo Sân Bóng Phương Viên sớm hoàn thành, 
-                  góp phần thúc đẩy phong trào thể dục thể thao và xây dựng một sân chơi lành mạnh cho cộng đồng.
-                </p>
-
-                {/* Date & Signature block */}
-                <div className="absolute bottom-8 right-12 flex flex-col items-center opacity-80">
-                  <p className="text-xs text-gray-500 italic mb-1">
-                    Ngày {new Date().getDate()} tháng {new Date().getMonth() + 1} năm {new Date().getFullYear()}
-                  </p>
-                  <p className="text-[10px] font-bold uppercase text-gray-600">Ban Quản Lý Dự Án</p>
-                </div>
-
               </div>
             </div>
           </div>
