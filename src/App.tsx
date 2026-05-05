@@ -2,6 +2,7 @@ import Header from "./components/landing/Header";
 import HeroSection from "./components/landing/HeroSection";
 import SponsorMarquee from "./components/landing/SponsorMarquee";
 import TournamentGallerySection from "./components/landing/TournamentGallerySection";
+import FootballFieldSection from "./components/landing/FootballFieldSection";
 import LeaderboardSection from "./components/landing/LeaderboardSection";
 import TransparencySection from "./components/landing/TransparencySection";
 import BudgetTimelineSection from "./components/landing/BudgetTimelineSection";
@@ -16,6 +17,8 @@ export default function App() {
       
       {/* Thêm phần chạy ngang text ở giữa */}
       <SponsorMarquee />
+
+      <FootballFieldSection />
 
       <TournamentGallerySection />
 

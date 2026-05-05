@@ -7,15 +7,17 @@ import { formatCurrency } from "@/lib/format";
 export default function HeroSection() {
   const [progress, setProgress] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [progressSlider, setProgressSlider] = useState(50);
+  const [isAutoAnimating, setIsAutoAnimating] = useState(false);
 
-  // Danh sách ảnh sân cũ (Load từ thư mục public/images/old-field/)
+  // Danh sách ảnh sân cũ
   const oldFieldImages = [
     "/images/old-field/1.jpg",
     "/images/old-field/2.jpg",
     "/images/old-field/3.jpg"
   ];
 
-  // Danh sách ảnh sân mới (Load từ thư mục public/images/new-field/)
+  // Danh sách ảnh sân mới
   const newFieldImages = [
     "/images/new-field/1.jfif",
     "/images/new-field/2.jfif",
@@ -25,12 +27,49 @@ export default function HeroSection() {
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % oldFieldImages.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev === 0 ? oldFieldImages.length - 1 : prev - 1));
 
+  // Progress bar cho quyên góp
   useEffect(() => {
     const timer = setTimeout(() => {
       setProgress((CURRENT_RAISED / FUNDING_GOAL) * 100);
     }, 500);
     return () => clearTimeout(timer);
   }, []);
+
+  // Tự động chuyển ảnh mỗi 9 giây
+  useEffect(() => {
+    const slideInterval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % oldFieldImages.length);
+    }, 9000);
+    return () => clearInterval(slideInterval);
+  }, [oldFieldImages.length]);
+
+  // Hiệu ứng "quét" (sweep) khi đổi ảnh
+  useEffect(() => {
+    setIsAutoAnimating(true);
+    // 1. Kéo nhanh về 100% để hiển thị toàn bộ ảnh CŨ
+    setProgressSlider(100);
+    
+    // 2. Chờ 1s, bắt đầu quét sang 0% để lộ ảnh MỚI
+    const t1 = setTimeout(() => {
+      setProgressSlider(0);
+    }, 1000);
+
+    // 3. Giữ nguyên ảnh MỚI trong 2s, sau đó quét về lại mức 50% (hiển thị nửa/nửa)
+    const t2 = setTimeout(() => {
+      setProgressSlider(50);
+    }, 4000);
+
+    // 4. Kết thúc hiệu ứng để người dùng có thể tự kéo thả mượt mà
+    const t3 = setTimeout(() => {
+      setIsAutoAnimating(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [currentSlide]);
 
   return (
     <section className="w-full bg-emerald-950 py-12 md:py-20 relative overflow-hidden">
@@ -52,112 +91,136 @@ export default function HeroSection() {
           Một viên gạch nhỏ hôm nay sẽ xây nên sân chơi lớn cho thế hệ ngày mai. Hãy chung tay cùng chúng tôi nuôi dưỡng đam mê, rèn luyện sức khỏe và thắp sáng phong trào thể thao quê hương!
         </p>
 
-        {/* Before / After Images & Slider */}
-        <div className="flex flex-col md:flex-row gap-4 w-full max-w-5xl mb-12">
+        {/* DESKTOP: Side-by-side Comparison (Màn hình lớn) */}
+        <div className="hidden md:flex flex-row w-full max-w-6xl mb-16 relative items-center justify-center group">
           
           {/* SLIDER SÂN CŨ */}
-          <div className="relative w-full md:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group bg-gray-900">
-            <div className="absolute top-3 left-3 bg-red-600/90 backdrop-blur-sm text-white px-3 py-1 text-xs md:text-sm font-bold rounded-lg z-20">
+          <div className="relative w-1/2 h-[450px] lg:h-[500px] rounded-l-3xl overflow-hidden shadow-2xl border-y-2 border-l-2 border-white/10 bg-gray-900 z-10">
+            <div className="absolute top-6 left-6 bg-red-600/90 backdrop-blur-sm text-white px-5 py-2.5 font-bold rounded-xl z-20 shadow-lg">
               Hiện tại (Đang xuống cấp)
             </div>
-            
-            <div 
-              className="flex w-full h-48 md:h-72 transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {oldFieldImages.map((src, idx) => (
-                <img 
-                  key={idx}
-                  src={src} 
-                  alt={`Sân đất hiện tại - Ảnh ${idx + 1}`} 
-                  className="w-full h-full object-cover flex-shrink-0 filter grayscale-[20%]"
-                  onError={(e) => {
-                    e.currentTarget.src = "https://images.unsplash.com/photo-1628882885449-37e127394c8e?q=80&w=2000&auto=format&fit=crop";
-                  }}
-                />
-              ))}
-            </div>
+            <img 
+              src={oldFieldImages[currentSlide]} 
+              alt="Sân đất hiện tại" 
+              className="w-full h-full object-cover filter grayscale-[20%] transition-all duration-700 hover:scale-105 hover:grayscale-0"
+              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1628882885449-37e127394c8e?q=80&w=2000&auto=format&fit=crop"; }}
+            />
+          </div>
+          
+          {/* Mũi tên ở giữa */}
+          <div className="absolute z-30 bg-emerald-500 rounded-full p-4 shadow-[0_0_30px_rgba(16,185,129,0.8)] border-4 border-emerald-950 transition-transform duration-500 group-hover:scale-110">
+            <ArrowRight className="w-8 h-8 text-white" />
+          </div>
 
-            {/* Slider Controls */}
-            <button 
-              onClick={prevSlide}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 z-20 transition-colors opacity-80 hover:opacity-100"
-            >
-              <ChevronLeft className="w-5 h-5" />
+          {/* SÂN MỚI (MỤC TIÊU) */}
+          <div className="relative w-1/2 h-[450px] lg:h-[500px] rounded-r-3xl overflow-hidden shadow-2xl border-y-2 border-r-2 border-white/10 bg-emerald-900 z-10">
+            <div className="absolute top-6 left-12 bg-emerald-500/90 backdrop-blur-sm text-white px-5 py-2.5 font-bold rounded-xl z-20 shadow-lg">
+              Mục tiêu (Cỏ nhân tạo 3D)
+            </div>
+            <img 
+              src={newFieldImages[currentSlide]} 
+              alt="Mô phỏng sân mới" 
+              className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
+              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1518605368461-1e1e38cd3543?q=80&w=2000&auto=format&fit=crop"; }}
+            />
+          </div>
+
+          {/* Controls chung cho Desktop */}
+          <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-8 bg-emerald-950/90 px-8 py-4 rounded-full backdrop-blur-md border border-white/10 shadow-2xl z-40">
+            <button onClick={prevSlide} className="text-white hover:text-emerald-400 transition-colors">
+              <ChevronLeft className="w-6 h-6" />
             </button>
-            <button 
-              onClick={nextSlide}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 z-20 transition-colors opacity-80 hover:opacity-100"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-            
-            {/* Indicators */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            <div className="flex gap-4">
               {oldFieldImages.map((_, idx) => (
                 <button 
                   key={idx} 
                   onClick={() => setCurrentSlide(idx)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === currentSlide ? 'bg-white' : 'bg-white/40 hover:bg-white/70'}`}
+                  className={`transition-all rounded-full ${idx === currentSlide ? 'w-10 h-2.5 bg-emerald-400' : 'w-2.5 h-2.5 bg-white/30 hover:bg-white/50'}`}
                 />
               ))}
             </div>
+            <button onClick={nextSlide} className="text-white hover:text-emerald-400 transition-colors">
+              <ChevronRight className="w-6 h-6" />
+            </button>
           </div>
-          
-          {/* Arrow */}
-          <div className="hidden md:flex items-center justify-center -mx-6 z-20">
-            <div className="bg-emerald-500 rounded-full p-2 shadow-xl border-4 border-emerald-950">
-              <ArrowRight className="w-6 h-6 text-white" />
-            </div>
-          </div>
+        </div>
 
-          {/* SÂN MỚI (MỤC TIÊU) */}
-          <div className="relative w-full md:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group bg-emerald-900">
-            <div className="absolute top-3 left-3 bg-emerald-500/90 backdrop-blur-sm text-white px-3 py-1 text-xs md:text-sm font-bold rounded-lg z-20">
+        {/* MOBILE: Before / After Interactive Slider (Màn hình nhỏ) */}
+        <div className="flex md:hidden w-full max-w-5xl mb-12 flex-col items-center">
+          <div className="relative w-full h-[60vh] min-h-[350px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-white/10 group">
+            
+            {/* Ảnh MỚI (Mục tiêu) nằm dưới */}
+            <img 
+              src={newFieldImages[currentSlide]} 
+              alt="Mục tiêu" 
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1518605368461-1e1e38cd3543?q=80&w=2000&auto=format&fit=crop"; }}
+            />
+            <div className="absolute bottom-6 right-4 bg-emerald-500/90 backdrop-blur-sm text-white px-3 py-1.5 text-xs font-bold rounded-lg z-10 pointer-events-none shadow-lg border border-white/20">
               Mục tiêu (Cỏ nhân tạo 3D)
             </div>
-            
+
+            {/* Ảnh CŨ (Hiện tại) bị cắt bởi clip-path */}
             <div 
-              className="flex w-full h-48 md:h-72 transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              className={`absolute inset-0 w-full h-full pointer-events-none ${isAutoAnimating ? 'transition-all duration-1000 ease-in-out' : ''}`}
+              style={{ clipPath: `polygon(0 0, ${progressSlider}% 0, ${progressSlider}% 100%, 0 100%)` }}
             >
-              {newFieldImages.map((src, idx) => (
-                <img 
-                  key={idx}
-                  src={src} 
-                  alt={`Mô phỏng sân mới - Ảnh ${idx + 1}`} 
-                  className="w-full h-full object-cover flex-shrink-0"
-                  onError={(e) => {
-                    e.currentTarget.src = "https://images.unsplash.com/photo-1518605368461-1e1e38cd3543?q=80&w=2000&auto=format&fit=crop";
-                  }}
-                />
-              ))}
+              <img 
+                src={oldFieldImages[currentSlide]} 
+                alt="Hiện tại" 
+                className="absolute inset-0 w-full h-full object-cover filter grayscale-[20%]"
+                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1628882885449-37e127394c8e?q=80&w=2000&auto=format&fit=crop"; }}
+              />
+              <div 
+                className="absolute bottom-6 left-4 bg-red-600/90 backdrop-blur-sm text-white px-3 py-1.5 text-xs font-bold rounded-lg shadow-lg border border-white/20 transition-opacity duration-200"
+                style={{ opacity: progressSlider > 30 ? 1 : 0 }}
+              >
+                Hiện tại (Đang xuống cấp)
+              </div>
             </div>
 
-            {/* Slider Controls */}
-            <button 
-              onClick={prevSlide}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 z-20 transition-colors opacity-80 hover:opacity-100"
+            {/* Thanh trượt (Slider handle) */}
+            <div 
+              className={`absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.8)] ${isAutoAnimating ? 'transition-all duration-1000 ease-in-out' : ''}`}
+              style={{ left: `calc(${progressSlider}% - 2px)` }}
             >
+              <div className="w-10 h-10 bg-white rounded-full shadow-2xl flex items-center justify-center border-2 border-emerald-500 text-emerald-600 pointer-events-none">
+                <ChevronLeft className="w-5 h-5 -mr-1.5" />
+                <ChevronRight className="w-5 h-5 -ml-1.5" />
+              </div>
+            </div>
+
+            {/* Input range ẩn để nhận sự kiện kéo thả (Touch & Mouse) */}
+            <input 
+              type="range" 
+              min="0" 
+              max="100" 
+              value={progressSlider} 
+              onPointerDown={() => setIsAutoAnimating(false)}
+              onChange={(e) => setProgressSlider(Number(e.target.value))}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30 touch-pan-y"
+            />
+          </div>
+
+          {/* Carousel controls (Mobile) */}
+          <div className="flex items-center justify-center mt-6 gap-6 bg-black/30 px-6 py-3 rounded-full backdrop-blur-sm border border-white/10 shadow-lg">
+            <button onClick={prevSlide} className="p-2 bg-white/10 active:bg-emerald-500 rounded-full text-white transition-colors">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <button 
-              onClick={nextSlide}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 z-20 transition-colors opacity-80 hover:opacity-100"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
             
-            {/* Indicators */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-              {newFieldImages.map((_, idx) => (
+            <div className="flex gap-3">
+              {oldFieldImages.map((_, idx) => (
                 <button 
                   key={idx} 
                   onClick={() => setCurrentSlide(idx)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === currentSlide ? 'bg-emerald-400' : 'bg-white/40 hover:bg-white/70'}`}
+                  className={`transition-all rounded-full ${idx === currentSlide ? 'w-8 h-2.5 bg-emerald-400' : 'w-2.5 h-2.5 bg-white/30'}`}
                 />
               ))}
             </div>
+
+            <button onClick={nextSlide} className="p-2 bg-white/10 active:bg-emerald-500 rounded-full text-white transition-colors">
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
