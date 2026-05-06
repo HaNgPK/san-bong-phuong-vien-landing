@@ -204,6 +204,271 @@ const LightPole = ({ position, rotation }: { position: [number, number, number],
   );
 }
 
+// ========================
+// ========================
+// DÒNG MƯƠNG - phía sau sân (Z âm), lòng mương xanh có tường bao
+// ========================
+const Canal = ({ length, fieldHalfWidth }: { length: number, fieldHalfWidth: number }) => {
+  const cZ = -(fieldHalfWidth + 14);
+  return (
+    <group>
+      {/* Lòng mương (nước lõm xuống) */}
+      <mesh position={[0, -0.2, cZ]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[length + 40, 7]} />
+        <meshStandardMaterial color="#22d3ee" transparent opacity={0.82} roughness={0.05} metalness={0.4} />
+      </mesh>
+      
+      {/* Tường bao mương bên trong (sát bờ sông) */}
+      <mesh position={[0, 0.4, cZ + 3.6]} receiveShadow castShadow>
+        <boxGeometry args={[length + 40, 1.2, 0.4]} />
+        <meshStandardMaterial color="#9ca3af" roughness={0.7} />
+      </mesh>
+      
+      {/* Tường bao mương bên ngoài (mặt xa) */}
+      <mesh position={[0, 0.4, cZ - 3.6]} receiveShadow castShadow>
+        <boxGeometry args={[length + 40, 1.2, 0.4]} />
+        <meshStandardMaterial color="#9ca3af" roughness={0.7} />
+      </mesh>
+
+      {/* Đất quanh mương */}
+      <mesh position={[0, 0.05, cZ + 5]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[length + 40, 2.8]} />
+        <meshStandardMaterial color="#166534" roughness={0.8} />
+      </mesh>
+      <mesh position={[0, 0.05, cZ - 5]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[length + 40, 2.8]} />
+        <meshStandardMaterial color="#166534" roughness={0.8} />
+      </mesh>
+
+      {/* Biển "DÒNG MƯƠNG" */}
+      <mesh position={[0, 1.4, cZ + 3.8]}>
+        <boxGeometry args={[10, 0.8, 0.15]} />
+        <meshStandardMaterial color="#0e7490" roughness={0.5} />
+      </mesh>
+    </group>
+  );
+};
+
+// ========================
+// NHÀ VĂN HÓA 2 TẦNG - bên PHẢI sân (X+)
+// ========================
+const CommunityCenter = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
+  // Đặt ở X+, xoay Y=0 để mặt tiền nhìn về phía đê (Z+) thay vì nhìn vào sân
+  return (
+    <group position={[fieldHalfLength + 22, 0, 0]} rotation={[0, 0, 0]}>
+      {/* Nền móng */}
+      <mesh position={[0, 0.3, 0]} castShadow receiveShadow>
+        <boxGeometry args={[26, 0.6, 13]} />
+        <meshStandardMaterial color="#d1d5db" roughness={0.7} />
+      </mesh>
+      {/* Tường tầng 1 */}
+      <mesh position={[0, 2.4, 0]} castShadow receiveShadow>
+        <boxGeometry args={[26, 4, 13]} />
+        <meshStandardMaterial color="#f5f0e8" roughness={0.6} />
+      </mesh>
+      {/* Tường tầng 2 */}
+      <mesh position={[0, 6.8, 0]} castShadow receiveShadow>
+        <boxGeometry args={[26, 3.6, 13]} />
+        <meshStandardMaterial color="#ede8dc" roughness={0.6} />
+      </mesh>
+      {/* Mái phẳng đua */}
+      <mesh position={[0, 9.5, 0]} castShadow>
+        <boxGeometry args={[28, 0.4, 15]} />
+        <meshStandardMaterial color="#b45309" roughness={0.8} />
+      </mesh>
+      {/* Mái tam giác (cone 4 mặt) */}
+      <mesh position={[0, 11.2, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <coneGeometry args={[10.5, 3.5, 4]} />
+        <meshStandardMaterial color="#92400e" roughness={0.7} />
+      </mesh>
+      {/* Cột trụ mặt tiền */}
+      {[-9, -4.5, 0, 4.5, 9].map((x, i) => (
+        <mesh key={i} position={[x, 2.4, 6.6]} castShadow>
+          <cylinderGeometry args={[0.28, 0.28, 4.2, 8]} />
+          <meshStandardMaterial color="#e5e7eb" roughness={0.5} />
+        </mesh>
+      ))}
+      {/* Ban công tầng 2 */}
+      <mesh position={[0, 5.2, 7]} castShadow>
+        <boxGeometry args={[26, 0.2, 1]} />
+        <meshStandardMaterial color="#d1d5db" roughness={0.5} />
+      </mesh>
+      {/* Lan can ban công */}
+      {Array.from({ length: 13 }).map((_, i) => (
+        <mesh key={`r${i}`} position={[-6 + i, 5.7, 7]} castShadow>
+          <boxGeometry args={[0.08, 1, 0.08]} />
+          <meshStandardMaterial color="#9ca3af" roughness={0.4} />
+        </mesh>
+      ))}
+      {/* Cửa chính */}
+      <mesh position={[0, 1.4, 6.55]}>
+        <boxGeometry args={[3.2, 2.8, 0.1]} />
+        <meshStandardMaterial color="#1e3a5f" roughness={0.3} />
+      </mesh>
+      {/* Cửa sổ tầng 1 */}
+      {[-8, -4.5, 4.5, 8].map((x, i) => (
+        <mesh key={`w1${i}`} position={[x, 2.5, 6.55]}>
+          <boxGeometry args={[2.2, 1.7, 0.08]} />
+          <meshStandardMaterial color="#bfdbfe" transparent opacity={0.65} roughness={0.1} metalness={0.2} />
+        </mesh>
+      ))}
+      {/* Cửa sổ tầng 2 */}
+      {[-8, -4.5, 0, 4.5, 8].map((x, i) => (
+        <mesh key={`w2${i}`} position={[x, 7, 6.55]}>
+          <boxGeometry args={[2.2, 1.7, 0.08]} />
+          <meshStandardMaterial color="#bfdbfe" transparent opacity={0.65} roughness={0.1} metalness={0.2} />
+        </mesh>
+      ))}
+      {/* Biển hiệu đỏ */}
+      <mesh position={[0, 8.4, 6.6]}>
+        <boxGeometry args={[13, 1.1, 0.15]} />
+        <meshStandardMaterial color="#dc2626" roughness={0.5} />
+      </mesh>
+      {/* Bậc thềm */}
+      {[0, 1, 2].map(i => (
+        <mesh key={`s${i}`} position={[0, 0.12 + i * 0.18, 7.1 + i * 0.35]} castShadow>
+          <boxGeometry args={[5, 0.18, 0.7]} />
+          <meshStandardMaterial color="#9ca3af" roughness={0.8} />
+        </mesh>
+      ))}
+      {/* Sân trước */}
+      <mesh position={[0, 0.02, 11]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[30, 9]} />
+        <meshStandardMaterial color="#94a3b8" roughness={0.9} />
+      </mesh>
+      {/* Cây xanh 2 bên */}
+      {[-12, 12].map((x, i) => (
+        <group key={`tr${i}`} position={[x, 0, 10]}>
+          <mesh position={[0, 1.5, 0]} castShadow>
+            <cylinderGeometry args={[0.2, 0.25, 3, 6]} />
+            <meshStandardMaterial color="#713f12" roughness={0.9} />
+          </mesh>
+          <mesh position={[0, 4, 0]} castShadow>
+            <sphereGeometry args={[2, 8, 6]} />
+            <meshStandardMaterial color="#15803d" roughness={0.8} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+};
+
+// ========================
+// DẢI ĐÊ - phía TRƯỚC gần user (Z+)
+// ========================
+const Dyke = ({ length, fieldHalfWidth }: { length: number, fieldHalfWidth: number }) => {
+  const dZ = fieldHalfWidth + 12;
+  return (
+    <group>
+      <mesh position={[0, 1.2, dZ]} castShadow receiveShadow>
+        <boxGeometry args={[length + 50, 2.4, 7]} />
+        <meshStandardMaterial color="#78350f" roughness={0.95} />
+      </mesh>
+      <mesh position={[0, 2.41, dZ]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[length + 50, 4]} />
+        <meshStandardMaterial color="#a3a3a3" roughness={0.8} />
+      </mesh>
+      {/* Taluy cỏ phía sân */}
+      <mesh position={[0, 1.1, dZ - 5.5]} rotation={[-Math.PI / 2 + 0.55, 0, 0]}>
+        <planeGeometry args={[length + 50, 3.5]} />
+        <meshStandardMaterial color="#4ade80" roughness={0.85} side={2} />
+      </mesh>
+      {/* Taluy cỏ phía ngoài */}
+      <mesh position={[0, 1.1, dZ + 5.5]} rotation={[-Math.PI / 2 - 0.55, 0, 0]}>
+        <planeGeometry args={[length + 50, 3.5]} />
+        <meshStandardMaterial color="#4ade80" roughness={0.85} side={2} />
+      </mesh>
+      {/* Cây bụi trên đê */}
+      {[-21, -15, -9, -3, 3, 9, 15, 21].map((x, i) => (
+        <mesh key={`b${i}`} position={[x, 2.8, dZ - 0.3]} castShadow>
+          <sphereGeometry args={[0.9, 6, 5]} />
+          <meshStandardMaterial color={i % 2 === 0 ? "#16a34a" : "#15803d"} roughness={0.85} />
+        </mesh>
+      ))}
+      {/* Cột mốc */}
+      {[-18, 0, 18].map((x, i) => (
+        <mesh key={`p${i}`} position={[x, 3.2, dZ]} castShadow>
+          <cylinderGeometry args={[0.1, 0.1, 1.5, 6]} />
+          <meshStandardMaterial color="#dc2626" roughness={0.6} />
+        </mesh>
+      ))}
+      {/* Biển "DẢI ĐÊ" */}
+      <mesh position={[0, 3.8, dZ]}>
+        <boxGeometry args={[8, 0.7, 0.15]} />
+        <meshStandardMaterial color="#b45309" roughness={0.5} />
+      </mesh>
+    </group>
+  );
+};
+
+// ========================
+// SÂN BÓNG CHUYỀN - bên TRÁI sân (X-)
+// ========================
+const VolleyballCourt = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
+  // Đặt ở X-, xoay Y=0 để lưới song song với đê
+  return (
+    <group position={[-(fieldHalfLength + 18), 0.01, 0]} rotation={[0, 0, 0]}>
+      {/* Nền sân xi măng */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[18, 9]} />
+        <meshStandardMaterial color="#d4c5a9" roughness={0.9} />
+      </mesh>
+      {/* Vạch biên ngang (trục X) */}
+      {[-4.5, 4.5].map((z, i) => (
+        <mesh key={`vl${i}`} position={[0, 0.02, z]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[18, 0.08]} />
+          <meshStandardMaterial color="white" roughness={0.5} />
+        </mesh>
+      ))}
+      {/* Vạch biên dọc (trục Z) */}
+      {[-9, 9].map((x, i) => (
+        <mesh key={`hl${i}`} position={[x, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[0.08, 9]} />
+          <meshStandardMaterial color="white" roughness={0.5} />
+        </mesh>
+      ))}
+      {/* Đường giữa & tấn công */}
+      {[0, -3, 3].map((x, i) => (
+        <mesh key={`cl${i}`} position={[x, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[0.07, 9]} />
+          <meshStandardMaterial color="white" roughness={0.5} />
+        </mesh>
+      ))}
+      {/* Cột lưới */}
+      {[-4.7, 4.7].map((z, i) => (
+        <mesh key={`np${i}`} position={[0, 1.2, z]} castShadow>
+          <cylinderGeometry args={[0.07, 0.07, 2.43, 8]} />
+          <meshStandardMaterial color="#78716c" metalness={0.6} roughness={0.4} />
+        </mesh>
+      ))}
+      {/* Lưới */}
+      <mesh position={[0, 1.2, 0]}>
+        <boxGeometry args={[0.05, 2, 9.5]} />
+        <meshStandardMaterial color="#e2e8f0" transparent opacity={0.3} wireframe />
+      </mesh>
+      {/* Dải trắng trên lưới */}
+      <mesh position={[0, 2.33, 0]}>
+        <boxGeometry args={[0.05, 0.1, 9.5]} />
+        <meshStandardMaterial color="white" roughness={0.4} />
+      </mesh>
+      {/* Cỏ xung quanh */}
+      {[-7, 7].map((z, i) => (
+        <mesh key={`cg${i}`} position={[0, -0.01, z]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[22, 5]} />
+          <meshStandardMaterial color="#166534" roughness={0.85} />
+        </mesh>
+      ))}
+      {/* Biển "SÂN BÓNG CHUYỀN" */}
+      <mesh position={[0, 1.2, 5]}>
+        <boxGeometry args={[7, 1, 0.15]} />
+        <meshStandardMaterial color="#1d4ed8" roughness={0.5} />
+      </mesh>
+    </group>
+  );
+};
+
+
+
 const EnvironmentSetup = ({ length, width }: { length: number, width: number }) => {
   const hl = length / 2;
   const hw = width / 2;
@@ -216,9 +481,9 @@ const EnvironmentSetup = ({ length, width }: { length: number, width: number }) 
         <meshStandardMaterial color="#ea580c" roughness={0.9} />
       </mesh>
 
-      {/* Nền đất bên ngoài */}
+      {/* Nền đất bên ngoài rộng hơn để chứa quang cảnh */}
       <mesh position={[0, -0.04, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[150, 150]} />
+        <planeGeometry args={[200, 200]} />
         <meshStandardMaterial color="#166534" roughness={1} />
       </mesh>
 
@@ -249,6 +514,19 @@ const EnvironmentSetup = ({ length, width }: { length: number, width: number }) 
       <LightPole position={[hl + 2.5, 0, -hw - 2.5]} rotation={Math.PI * 3 / 4} />
       <LightPole position={[hl + 2.5, 0, hw + 2.5]} rotation={Math.PI * 5 / 4} />
       <LightPole position={[-hl - 2.5, 0, hw + 2.5]} rotation={-Math.PI / 4} />
+
+      {/* ===== QUANG CẢNH XUNG QUANH ===== */}
+      {/* Dòng mương - phía sau (Z-) màu xanh */}
+      <Canal length={length} fieldHalfWidth={hw} />
+
+      {/* Nhà văn hóa 2 tầng - bên PHẢI sân (X+) */}
+      <CommunityCenter fieldHalfLength={hl} />
+
+      {/* Dải đê - phía TRƯỚC gần user (Z+) */}
+      <Dyke length={length} fieldHalfWidth={hw} />
+
+      {/* Sân bóng chuyền - bên TRÁI sân (X-) */}
+      <VolleyballCourt fieldHalfLength={hl} />
     </group>
   );
 }
