@@ -1,8 +1,10 @@
-import { ALL_TOP_SPONSORS } from "@/data/mockData";
+import { useDonations } from "@/contexts/DonationContext";
 import { formatCurrency } from "@/lib/format";
 import { Star } from "lucide-react";
 
 export default function SponsorMarquee() {
+  const { allTopSponsors } = useDonations();
+
   return (
     <section className="bg-gray-50 pt-16 md:pt-20 pb-4 overflow-hidden relative">
       <div className="text-center mb-6 px-4">
@@ -21,7 +23,7 @@ export default function SponsorMarquee() {
 
         <div className="animate-marquee flex items-center whitespace-nowrap">
           {/* We map twice to create an infinite loop effect */}
-          {[...ALL_TOP_SPONSORS, ...ALL_TOP_SPONSORS].map((sponsor, idx) => (
+          {[...allTopSponsors, ...allTopSponsors].map((sponsor, idx) => (
             <div key={`${sponsor.id}-${idx}`} className="flex items-center mx-6">
               <span className="font-bold text-gray-800 text-lg mr-2">{sponsor.name}</span>
               <span className="text-emerald-600 font-black">{formatCurrency(sponsor.amount)}</span>

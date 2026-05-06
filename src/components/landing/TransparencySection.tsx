@@ -1,26 +1,35 @@
 import { useState, useMemo } from "react";
-import { Search, ArrowRight, Calendar, MessageCircle, Medal } from "lucide-react";
+import { Search, ArrowRight, Calendar, MessageCircle, Medal, RefreshCw } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ALL_DONATIONS } from "@/data/mockData";
+import { useDonations } from "@/contexts/DonationContext";
 import { formatCurrency, getCategoryColor } from "@/lib/format";
 import CertificateModal from "./CertificateModal";
 
 export default function TransparencySection() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedDonation, setSelectedDonation] = useState<{name: string, amount: number} | null>(null);
+  
+  const { donations, loading, refreshData, categoryTotals, currentRaised } = useDonations();
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refreshData();
+    setTimeout(() => setIsRefreshing(false), 500); // UI feedback delay
+  };
 
   const filteredDonations = useMemo(() => {
-    if (!searchQuery.trim()) return ALL_DONATIONS;
+    if (!searchQuery.trim()) return donations;
     const lowerQuery = searchQuery.toLowerCase();
-    return ALL_DONATIONS.filter(d => 
+    return donations.filter(d => 
       d.name.toLowerCase().includes(lowerQuery) || 
       d.message.toLowerCase().includes(lowerQuery) ||
       d.category.toLowerCase().includes(lowerQuery)
     );
-  }, [searchQuery]);
+  }, [searchQuery, donations]);
 
   return (
     <section id="transparency-section" className="py-12 md:py-16 bg-white border-y border-gray-100">
@@ -31,6 +40,15 @@ export default function TransparencySection() {
             <p className="text-gray-500 mb-4 md:mb-0">Cập nhật tự động mọi khoản thu</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+            <Button 
+              onClick={handleRefresh}
+              variant="outline"
+              className="w-full sm:w-auto bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+              disabled={isRefreshing || loading}
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing || loading ? 'animate-spin' : ''}`} />
+              Làm mới
+            </Button>
             <Button 
               onClick={() => {
                 setSelectedDonation(null);

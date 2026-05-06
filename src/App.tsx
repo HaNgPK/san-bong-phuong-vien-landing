@@ -10,6 +10,7 @@ import SchedulePlanSection from "./components/landing/SchedulePlanSection";
 import PaymentSection from "./components/landing/PaymentSection";
 import Footer from "./components/landing/Footer";
 import { motion, Variants } from "framer-motion";
+import { DonationProvider } from "./contexts/DonationContext";
 
 const fadeUpVariant: Variants = {
   hidden: { opacity: 0, y: 60 },
@@ -33,40 +34,42 @@ const ScrollReveal = ({ children }: { children: React.ReactNode }) => (
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-emerald-200 overflow-x-hidden">
-      <Header />
-      <HeroSection />
-      <SponsorMarquee />
+    <DonationProvider>
+      <div className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-emerald-200 overflow-x-hidden">
+        <Header />
+        <HeroSection />
+        <SponsorMarquee />
 
-      <ScrollReveal>
-        <FootballFieldSection />
-      </ScrollReveal>
+        <ScrollReveal>
+          <FootballFieldSection />
+        </ScrollReveal>
 
-      <ScrollReveal>
-        <SchedulePlanSection />
-      </ScrollReveal>
+        <ScrollReveal>
+          <SchedulePlanSection />
+        </ScrollReveal>
 
-      <ScrollReveal>
-        <TournamentGallerySection />
-      </ScrollReveal>
+        <ScrollReveal>
+          <TournamentGallerySection />
+        </ScrollReveal>
 
-      <ScrollReveal>
-        <LeaderboardSection />
-      </ScrollReveal>
-      
-      <ScrollReveal>
-        <TransparencySection />
-      </ScrollReveal>
-      
-      <ScrollReveal>
-        <BudgetTimelineSection />
-      </ScrollReveal>
-      
-      <ScrollReveal>
-        <PaymentSection />
-      </ScrollReveal>
-      
-      <Footer />
-    </div>
+        <ScrollReveal>
+          <LeaderboardSection />
+        </ScrollReveal>
+        
+        <ScrollReveal>
+          <TransparencySection />
+        </ScrollReveal>
+        
+        <ScrollReveal>
+          <BudgetTimelineSection />
+        </ScrollReveal>
+        
+        <ScrollReveal>
+          <PaymentSection />
+        </ScrollReveal>
+        
+        <Footer />
+      </div>
+    </DonationProvider>
   );
 }

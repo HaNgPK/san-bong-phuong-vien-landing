@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { Heart, MapPin, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FUNDING_GOAL, CURRENT_RAISED } from "@/data/mockData";
 import { formatCurrency } from "@/lib/format";
+import { useDonations } from "@/contexts/DonationContext";
 
 export default function HeroSection() {
   const [progress, setProgress] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progressSlider, setProgressSlider] = useState(50);
   const [isAutoAnimating, setIsAutoAnimating] = useState(false);
+  
+  const { currentRaised, fundingGoal, loading } = useDonations();
 
   // Danh sách ảnh sân cũ
   const oldFieldImages = [
@@ -29,11 +31,12 @@ export default function HeroSection() {
 
   // Progress bar cho quyên góp
   useEffect(() => {
+    if (loading) return;
     const timer = setTimeout(() => {
-      setProgress((CURRENT_RAISED / FUNDING_GOAL) * 100);
+      setProgress((currentRaised / fundingGoal) * 100);
     }, 500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [currentRaised, fundingGoal, loading]);
 
   // Tự động chuyển ảnh mỗi 9 giây
   useEffect(() => {
@@ -229,14 +232,14 @@ export default function HeroSection() {
           <div className="flex flex-col items-center mb-8">
             <p className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-2">Đã Quyên Góp Được</p>
             <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-600 drop-shadow-sm">
-              {formatCurrency(CURRENT_RAISED)}
+              {formatCurrency(currentRaised)}
             </h2>
           </div>
 
           <div className="space-y-4">
             <div className="flex justify-between text-sm font-bold text-gray-600">
               <span>Tiến độ: {progress.toFixed(1)}%</span>
-              <span>Mục tiêu: {formatCurrency(FUNDING_GOAL)}</span>
+              <span>Mục tiêu: {formatCurrency(fundingGoal)}</span>
             </div>
             <div className="relative h-6 bg-gray-100 rounded-full overflow-hidden shadow-inner">
               <div 
