@@ -115,7 +115,14 @@ export default function LeaderboardSection() {
                           paddingAngle={6}
                           dataKey="value"
                           labelLine={false}
-                          label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+                          label={(props: any) => {
+                            const cx = props.cx || 0;
+                            const cy = props.cy || 0;
+                            const midAngle = props.midAngle || 0;
+                            const innerRadius = props.innerRadius || 0;
+                            const outerRadius = props.outerRadius || 0;
+                            const percent = props.percent || 0;
+                            
                             const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
                             const x = cx + radius * Math.cos(-midAngle * Math.PI / 180);
                             const y = cy + radius * Math.sin(-midAngle * Math.PI / 180);
@@ -137,7 +144,7 @@ export default function LeaderboardSection() {
                           ))}
                         </Pie>
                         <Tooltip 
-                          formatter={(value: number) => formatCurrency(value)}
+                          formatter={(value: any) => formatCurrency(Number(value) || 0)}
                           contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)', fontWeight: 'bold' }}
                         />
                       </PieChart>
