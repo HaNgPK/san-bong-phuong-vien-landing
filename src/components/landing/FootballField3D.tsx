@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, ContactShadows, Sky, Loader } from '@react-three/drei';
+import { useMemo, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, ContactShadows, Sky, Loader, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
 const useFieldTexture = (length: number, width: number) => {
@@ -354,6 +354,84 @@ const CommunityCenter = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
 };
 
 // ========================
+// CỜ VIỆT NAM (vẫy bằng useFrame)
+// ========================
+const VietNamFlag = ({ position }: { position: [number, number, number] }) => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  
+  const flagTexture = useMemo(() => {
+    if (typeof document === 'undefined') return null;
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 400;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    // Nền đỏ
+    ctx.fillStyle = '#da251d';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Sao vàng
+    ctx.fillStyle = '#ffcd00';
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const outerRadius = 80;
+    const innerRadius = 30;
+    const spikes = 5;
+
+    ctx.beginPath();
+    for (let i = 0; i < spikes * 2; i++) {
+      const radius = i % 2 === 0 ? outerRadius : innerRadius;
+      const angle = (i * Math.PI) / spikes - Math.PI / 2;
+      ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (meshRef.current) {
+      const t = clock.getElapsedTime();
+      const posAttr = meshRef.current.geometry.attributes.position;
+      const positions = posAttr.array;
+      // Vẫy cờ bằng cách thay đổi tọa độ z của đỉnh dựa trên x và thời gian
+      for (let i = 0; i < positions.length; i += 3) {
+        const x = positions[i];
+        // Điểm x = -1.5 là gốc cột cờ, biên độ vẫy tăng dần về đuôi cờ
+        positions[i + 2] = Math.sin((x + 1.5) * 2 - t * 6) * ((x + 1.5) * 0.15);
+      }
+      posAttr.needsUpdate = true;
+    }
+  });
+
+  return (
+    <group position={position}>
+      {/* Cột cờ */}
+      <mesh position={[0, 4, 0]} castShadow>
+        <cylinderGeometry args={[0.05, 0.08, 8]} />
+        <meshStandardMaterial color="#d1d5db" metalness={0.8} />
+      </mesh>
+      
+      {/* Đế cột */}
+      <mesh position={[0, 0.2, 0]} castShadow>
+        <cylinderGeometry args={[0.4, 0.5, 0.4]} />
+        <meshStandardMaterial color="#9ca3af" />
+      </mesh>
+
+      {/* Lá cờ (treo ở ngọn cột) */}
+      <mesh ref={meshRef} position={[1.5, 6.5, 0]} castShadow>
+        <planeGeometry args={[3, 2, 20, 20]} />
+        {flagTexture && <meshStandardMaterial map={flagTexture} side={THREE.DoubleSide} roughness={0.6} />}
+      </mesh>
+    </group>
+  );
+};
+
+// ========================
 // DẢI ĐÊ - phía TRƯỚC gần user (Z+)
 // ========================
 const Dyke = ({ length, fieldHalfWidth }: { length: number, fieldHalfWidth: number }) => {
@@ -397,6 +475,8 @@ const Dyke = ({ length, fieldHalfWidth }: { length: number, fieldHalfWidth: numb
         <boxGeometry args={[8, 0.7, 0.15]} />
         <meshStandardMaterial color="#b45309" roughness={0.5} />
       </mesh>
+      {/* Cờ Việt Nam ở chính giữa đỉnh đê */}
+      <VietNamFlag position={[0, 2.41, dZ]} />
     </group>
   );
 };
@@ -509,11 +589,15 @@ const EnvironmentSetup = ({ length, width }: { length: number, width: number }) 
         <meshStandardMaterial color="#cbd5e1" transparent opacity={0.2} wireframe />
       </mesh>
 
-      {/* 4 Cột đèn */}
+      {/* 4 Cột đèn góc */}
       <LightPole position={[-hl - 2.5, 0, -hw - 2.5]} rotation={Math.PI / 4} />
       <LightPole position={[hl + 2.5, 0, -hw - 2.5]} rotation={Math.PI * 3 / 4} />
       <LightPole position={[hl + 2.5, 0, hw + 2.5]} rotation={Math.PI * 5 / 4} />
       <LightPole position={[-hl - 2.5, 0, hw + 2.5]} rotation={-Math.PI / 4} />
+
+      {/* 2 Cột đèn giữa sân */}
+      <LightPole position={[0, 0, -hw - 2.5]} rotation={Math.PI / 2} />
+      <LightPole position={[0, 0, hw + 2.5]} rotation={-Math.PI / 2} />
 
       {/* ===== QUANG CẢNH XUNG QUANH ===== */}
       {/* Dòng mương - phía sau (Z-) màu xanh */}
@@ -551,6 +635,30 @@ const Field = ({ length, width }: { length: number, width: number }) => {
       <Goal position={[actualLength / 2, 0, 0]} rotation={[0, -Math.PI / 2, 0]} />
 
       <Players length={actualLength} width={actualWidth} />
+
+      {/* Hiển thị kích thước DÀI (dọc theo trục X, nằm sát biên dưới) */}
+      <Text
+        position={[0, 0.02, actualWidth / 2 + 1]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        fontSize={2}
+        color="white"
+        outlineWidth={0.05}
+        outlineColor="black"
+      >
+        Chiều dài: {actualLength}m
+      </Text>
+
+      {/* Hiển thị kích thước RỘNG (dọc theo trục Z, nằm sát biên phải) */}
+      <Text
+        position={[actualLength / 2 + 1, 0.02, 0]}
+        rotation={[-Math.PI / 2, 0, Math.PI / 2]}
+        fontSize={2}
+        color="white"
+        outlineWidth={0.05}
+        outlineColor="black"
+      >
+        Chiều rộng: {actualWidth}m
+      </Text>
     </group>
   );
 };
