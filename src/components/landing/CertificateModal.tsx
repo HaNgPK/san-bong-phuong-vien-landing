@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Download, Medal, Image as ImageIcon, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import html2canvas from "html2canvas";
+// import html2canvas from "html2canvas";
 import { formatCurrency } from "@/lib/format";
 
 interface CertificateModalProps {
@@ -66,6 +66,7 @@ export default function CertificateModal({ isOpen, onClose, initialName = "", in
     setIsDownloading(true);
     
     try {
+      const html2canvas = (await import("html2canvas")).default;
       const canvas = await html2canvas(certificateRef.current, {
         scale: 2, 
         useCORS: true,
