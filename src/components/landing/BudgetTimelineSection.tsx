@@ -75,7 +75,7 @@ export default function BudgetTimelineSection() {
                   <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 md:p-5 rounded-2xl border-2 border-emerald-400 bg-emerald-50 shadow-md transform transition-transform duration-300 hover:-translate-y-1">
                     <div className="font-black text-emerald-800 text-base md:text-lg flex items-center gap-2">
                       <Sparkles className="w-4 h-4 text-emerald-500" />
-                      GĐ 1 : Đang kêu gọi
+                      GĐ 1: Đang kêu gọi
                     </div>
                     <div className="text-sm text-emerald-700 mt-2 font-medium">
                       Khởi động: Tháng 5/2026 - Hiện tại
