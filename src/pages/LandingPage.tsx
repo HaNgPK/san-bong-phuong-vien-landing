@@ -1,6 +1,8 @@
 import Header from "../components/landing/Header";
 import HeroSection from "../components/landing/HeroSection";
 import SponsorMarquee from "../components/landing/SponsorMarquee";
+import MotivationSection from "../components/landing/MotivationSection";
+import QuickDonateSection from "../components/landing/QuickDonateSection";
 import TournamentGallerySection from "../components/landing/TournamentGallerySection";
 import FootballFieldSection from "../components/landing/FootballFieldSection";
 import LeaderboardSection from "../components/landing/LeaderboardSection";
@@ -39,6 +41,14 @@ export default function LandingPage() {
         <Header />
         <HeroSection />
         <SponsorMarquee />
+
+        <ScrollReveal>
+          <MotivationSection />
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <QuickDonateSection />
+        </ScrollReveal>
 
         <ScrollReveal>
           <FootballFieldSection />

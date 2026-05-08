@@ -10,7 +10,7 @@ export default function HeroSection() {
   const [progressSlider, setProgressSlider] = useState(50);
   const [isAutoAnimating, setIsAutoAnimating] = useState(false);
   
-  const { currentRaised, fundingGoal, loading } = useDonations();
+  const { currentRaised, fundingGoal, loading, donations } = useDonations();
 
   // Danh sách ảnh sân cũ
   const oldFieldImages = [
@@ -75,7 +75,7 @@ export default function HeroSection() {
   }, [currentSlide]);
 
   return (
-    <section className="w-full bg-emerald-950 py-12 md:py-20 relative overflow-hidden">
+    <section className="w-full bg-emerald-950 py-8 md:py-12 relative overflow-hidden">
       {/* Decorative background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
 
@@ -228,36 +228,48 @@ export default function HeroSection() {
         </div>
 
         {/* Real-time Stats Card */}
-        <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl p-6 md:p-10 border border-gray-100">
-          <div className="flex flex-col items-center mb-8">
-            <p className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-2">Đã Quyên Góp Được</p>
-            <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-600 drop-shadow-sm">
+        <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-emerald-100/50 ring-2 ring-emerald-50/50 relative overflow-hidden transform transition-all hover:scale-[1.01]">
+          {/* Subtle background glow */}
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-emerald-100 rounded-full blur-3xl opacity-30"></div>
+          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-teal-100 rounded-full blur-3xl opacity-30"></div>
+
+          <div className="relative z-10 flex flex-col items-center mb-6 mt-2">
+            <p className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-3">TỔNG SỐ TIỀN ĐÃ CHUNG TAY</p>
+            <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 drop-shadow-sm mb-2">
               {formatCurrency(currentRaised)}
             </h2>
+            <div className="flex items-center gap-2 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100/50 shadow-sm mt-2">
+              <span className="text-lg">🤝</span>
+              <span className="text-emerald-800 font-semibold text-sm">Từ <strong className="text-emerald-600">{donations.length}</strong> lượt chung tay góp sức</span>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex justify-between text-sm font-bold text-gray-600">
-              <span>Tiến độ: {progress.toFixed(1)}%</span>
-              <span>Mục tiêu: {formatCurrency(fundingGoal)}</span>
+          <div className="relative z-10 space-y-3">
+            <div className="flex justify-between text-sm md:text-base font-bold text-gray-700">
+              <span className="flex items-center gap-1.5">
+                Tiến độ: <span className="text-emerald-600">{progress.toFixed(1)}%</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                Mục tiêu: <span className="text-gray-900">{formatCurrency(fundingGoal)}</span>
+              </span>
             </div>
-            <div className="relative h-6 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+            <div className="relative h-8 md:h-10 bg-gray-100 rounded-full overflow-hidden shadow-inner border border-gray-200/50">
               <div 
-                className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-400 to-green-500 transition-all duration-[2000ms] ease-out rounded-full"
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-[2000ms] ease-out rounded-full shadow-[inset_0_-2px_4px_rgba(0,0,0,0.1)]"
                 style={{ width: `${progress}%` }}
               >
-                <div className="w-full h-full bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_25%,rgba(255,255,255,0.2)_50%,transparent_50%,transparent_75%,rgba(255,255,255,0.2)_75%,rgba(255,255,255,0.2)_100%)] bg-[length:20px_20px] animate-[slide_1s_linear_infinite]"></div>
+                <div className="w-full h-full bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_25%,rgba(255,255,255,0.2)_50%,transparent_50%,transparent_75%,rgba(255,255,255,0.2)_75%,rgba(255,255,255,0.2)_100%)] bg-[length:24px_24px] animate-[slide_1s_linear_infinite]"></div>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 flex justify-center">
+          <div className="relative z-10 mt-8 flex justify-center">
             <Button 
               size="lg" 
-              className="w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full h-14 text-lg font-bold shadow-lg hover:shadow-emerald-500/30 transition-all hover:-translate-y-1 animate-pulse"
+              className="w-full md:w-4/5 px-8 bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 bg-[length:200%_auto] hover:bg-right text-white rounded-2xl h-16 md:h-20 text-xl md:text-2xl font-black shadow-[0_10px_40px_-10px_rgba(16,185,129,0.5)] transition-all hover:-translate-y-1 animate-pulse"
               onClick={() => document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              <Heart className="mr-2 w-5 h-5" /> Đóng góp ngay
+              <Heart className="mr-3 w-7 h-7 md:w-8 md:h-8 fill-white/20 animate-bounce" /> TIẾN HÀNH CHUNG SỨC
             </Button>
           </div>
         </div>

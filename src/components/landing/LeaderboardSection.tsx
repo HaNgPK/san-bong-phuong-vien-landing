@@ -60,7 +60,7 @@ export default function LeaderboardSection() {
     .reduce((sum, [_, val]) => sum + val, 0);
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-10 md:py-12 bg-white">
       <div className="container px-4 mx-auto max-w-5xl">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-gray-900 uppercase tracking-tight">Bảng Vàng Tri Ân</h2>

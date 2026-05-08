@@ -52,7 +52,7 @@ export default function TransparencySection() {
   return (
     <section
       id="transparency-section"
-      className="py-12 md:py-16 bg-white border-y border-gray-100"
+      className="py-10 md:py-12 bg-white border-y border-gray-100"
     >
       <div className="container px-4 mx-auto max-w-5xl">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-8 gap-4 text-center md:text-left">

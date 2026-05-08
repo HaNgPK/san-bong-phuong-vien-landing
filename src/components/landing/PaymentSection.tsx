@@ -68,7 +68,7 @@ export default function PaymentSection() {
   const dynamicQrUrl = `https://img.vietqr.io/image/techcombank-${BANK_DETAILS.accountNumber}-compact2.jpg?accountName=${encodeURIComponent(BANK_DETAILS.accountName)}&amount=0&addInfo=${encodeURIComponent(transferMessage)}`;
 
   return (
-    <section id="payment-section" className="py-16 md:py-20 bg-emerald-900 text-white relative">
+    <section id="payment-section" className="py-10 md:py-16 bg-emerald-900 text-white relative">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[150%] bg-white/5 rotate-12 transform origin-top-right"></div>
       </div>
@@ -77,9 +77,6 @@ export default function PaymentSection() {
         <div className="text-center mb-8 md:mb-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Thông Tin Đóng Góp</h2>
           <p className="text-emerald-100 text-sm md:text-base">Quét mã QR hoặc chuyển khoản thủ công theo thông tin bên dưới.</p>
-          <div className="mt-6 inline-block bg-red-600 text-white px-6 py-3 rounded-2xl font-black text-lg md:text-xl shadow-[0_0_20px_rgba(220,38,38,0.6)] border-2 border-red-400 transform hover:scale-105 transition-transform cursor-default animate-pulse">
-            ⚠️ CHÚ Ý: ĐANG TRONG THỜI GIAN PHÁT TRIỂN DỰ ÁN ⚠️
-          </div>
         </div>
 
         <div className="bg-white text-gray-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col-reverse md:flex-row">

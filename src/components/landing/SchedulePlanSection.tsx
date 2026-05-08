@@ -53,7 +53,7 @@ export default function SchedulePlanSection() {
   const activeData = schedules[activeTab];
 
   return (
-    <section className="py-20 md:py-24 bg-white relative overflow-hidden">
+    <section className="py-10 md:py-16 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-black text-emerald-900 mb-6 tracking-tight">

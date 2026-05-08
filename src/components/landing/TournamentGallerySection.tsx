@@ -65,7 +65,7 @@ export default function TournamentGallerySection() {
   };
 
   return (
-    <section className="py-12 md:py-16 bg-white border-b border-gray-100 overflow-hidden select-none">
+    <section className="py-10 md:py-12 bg-white border-b border-gray-100 overflow-hidden select-none">
       <div className="container px-4 mx-auto max-w-4xl text-center mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center justify-center">
           <Camera className="w-6 h-6 mr-3 text-emerald-600" />

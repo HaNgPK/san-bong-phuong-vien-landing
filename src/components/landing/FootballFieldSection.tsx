@@ -12,7 +12,7 @@ export default function FootballFieldSection() {
   ];
 
   return (
-    <section id="3d-model" className="py-10 bg-white relative">
+    <section id="3d-model" className="py-8 md:py-10 bg-white relative">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
       
       <div className="container mx-auto px-4">
