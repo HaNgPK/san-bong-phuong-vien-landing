@@ -1,7 +1,9 @@
+"use client";
+
 import React, { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, ChevronLeft, ShieldCheck, Zap, Info, CalendarDays, ChevronRight, LayoutGrid, List } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 type TimeSlot = {
   id: string;
@@ -208,7 +210,7 @@ export default function SchedulePage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center text-gray-600 hover:text-emerald-600 transition-colors">
+          <Link href="/" className="px-6 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-500 transition-colors shadow-sm text-sm">
             <ChevronLeft className="w-5 h-5 mr-1" />
             <span className="font-medium hidden sm:inline">Trang chủ</span>
           </Link>

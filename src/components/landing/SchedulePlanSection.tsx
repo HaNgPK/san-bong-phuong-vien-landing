@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Clock, Sun, Moon, Users, ShieldCheck, Zap, CalendarDays } from 'lucide-react';
 
 export default function SchedulePlanSection() {
@@ -149,7 +149,7 @@ export default function SchedulePlanSection() {
           </div>
 
           <div className="mt-10 text-center">
-            <Link to="/quan-ly-san" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg shadow-indigo-600/30 transition-all hover:-translate-y-1 hover:shadow-indigo-600/50">
+            <Link href="/quan-ly-san" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg shadow-indigo-600/30 transition-all hover:-translate-y-1 hover:shadow-indigo-600/50">
               <CalendarDays className="w-5 h-5 mr-2" />
               Xem Lịch Sân & Quản Lý Đăng Ký
             </Link>

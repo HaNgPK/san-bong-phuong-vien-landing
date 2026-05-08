@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import FootballField3D from './FootballField3D';
+import dynamic from 'next/dynamic';
+const FootballField3D = dynamic(() => import('./FootballField3D'), { ssr: false });
 import { Ruler, Maximize2, Minimize2 } from 'lucide-react';
 
 export default function FootballFieldSection() {

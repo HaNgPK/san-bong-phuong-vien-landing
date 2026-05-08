@@ -1,43 +1,51 @@
-import { useMemo, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, ContactShadows, Sky, Loader, Text } from '@react-three/drei';
-import * as THREE from 'three';
+"use client";
+
+import { useMemo, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  OrbitControls,
+  ContactShadows,
+  Sky,
+  Loader,
+  Text,
+} from "@react-three/drei";
+import * as THREE from "three";
 
 const useFieldTexture = (length: number, width: number) => {
   const texture = useMemo(() => {
-    if (typeof document === 'undefined') return null;
-    
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    if (typeof document === "undefined") return null;
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
     if (!ctx) return null;
 
-    const scale = 20; 
+    const scale = 20;
     canvas.width = length * scale;
     canvas.height = width * scale;
-    
+
     // Background grass
-    ctx.fillStyle = '#2e7d32'; 
+    ctx.fillStyle = "#2e7d32";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Grass stripes
-    ctx.fillStyle = '#276c2a';
+    ctx.fillStyle = "#276c2a";
     const stripeWidth = 5 * scale;
     for (let i = 0; i < length * scale; i += stripeWidth * 2) {
       ctx.fillRect(i, 0, stripeWidth, canvas.height);
     }
 
     // Lines configuration
-    ctx.strokeStyle = '#ffffff';
+    ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 0.12 * scale; // 12cm line width
-    
+
     const marginX = 2 * scale; // 2m margin
     const marginY = 2 * scale;
     const fieldW = (length - 4) * scale;
     const fieldH = (width - 4) * scale;
-    
+
     // Draw outer boundary
     ctx.strokeRect(marginX, marginY, fieldW, fieldH);
-    
+
     // Center line
     ctx.beginPath();
     ctx.moveTo(marginX + fieldW / 2, marginY);
@@ -47,13 +55,25 @@ const useFieldTexture = (length: number, width: number) => {
     // Center circle (Bán kính 6m cho sân 7)
     const centerRadius = 6 * scale;
     ctx.beginPath();
-    ctx.arc(marginX + fieldW / 2, marginY + fieldH / 2, centerRadius, 0, Math.PI * 2);
+    ctx.arc(
+      marginX + fieldW / 2,
+      marginY + fieldH / 2,
+      centerRadius,
+      0,
+      Math.PI * 2,
+    );
     ctx.stroke();
-    
+
     // Center dot
     ctx.beginPath();
-    ctx.arc(marginX + fieldW / 2, marginY + fieldH / 2, 0.3 * scale, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
+    ctx.arc(
+      marginX + fieldW / 2,
+      marginY + fieldH / 2,
+      0.3 * scale,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fillStyle = "#ffffff";
     ctx.fill();
 
     // Penalty areas (Vòng bán nguyệt 6m cho sân 7)
@@ -61,31 +81,55 @@ const useFieldTexture = (length: number, width: number) => {
 
     // Left Penalty Arc
     ctx.beginPath();
-    ctx.arc(marginX, marginY + fieldH / 2, penaltyRadius, -Math.PI / 2, Math.PI / 2);
+    ctx.arc(
+      marginX,
+      marginY + fieldH / 2,
+      penaltyRadius,
+      -Math.PI / 2,
+      Math.PI / 2,
+    );
     ctx.stroke();
 
     // Right Penalty Arc
     ctx.beginPath();
-    ctx.arc(marginX + fieldW, marginY + fieldH / 2, penaltyRadius, Math.PI / 2, -Math.PI / 2);
+    ctx.arc(
+      marginX + fieldW,
+      marginY + fieldH / 2,
+      penaltyRadius,
+      Math.PI / 2,
+      -Math.PI / 2,
+    );
     ctx.stroke();
 
     // Penalty spots
     const penaltySpotDist = 6 * scale;
     ctx.beginPath();
-    ctx.arc(marginX + penaltySpotDist, marginY + fieldH / 2, 0.3 * scale, 0, Math.PI * 2);
+    ctx.arc(
+      marginX + penaltySpotDist,
+      marginY + fieldH / 2,
+      0.3 * scale,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(marginX + fieldW - penaltySpotDist, marginY + fieldH / 2, 0.3 * scale, 0, Math.PI * 2);
+    ctx.arc(
+      marginX + fieldW - penaltySpotDist,
+      marginY + fieldH / 2,
+      0.3 * scale,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
 
     // Corner arcs
     const cornerRadius = 1 * scale;
     [
-      [marginX, marginY, 0, Math.PI/2],
-      [marginX + fieldW, marginY, Math.PI/2, Math.PI],
+      [marginX, marginY, 0, Math.PI / 2],
+      [marginX + fieldW, marginY, Math.PI / 2, Math.PI],
       [marginX + fieldW, marginY + fieldH, Math.PI, Math.PI * 1.5],
-      [marginX, marginY + fieldH, Math.PI * 1.5, Math.PI * 2]
+      [marginX, marginY + fieldH, Math.PI * 1.5, Math.PI * 2],
     ].forEach(([x, y, start, end]) => {
       ctx.beginPath();
       ctx.arc(x, y, cornerRadius, start, end);
@@ -101,7 +145,13 @@ const useFieldTexture = (length: number, width: number) => {
   return texture;
 };
 
-const Goal = ({ position, rotation }: { position: [number, number, number], rotation: [number, number, number] }) => {
+const Goal = ({
+  position,
+  rotation,
+}: {
+  position: [number, number, number];
+  rotation: [number, number, number];
+}) => {
   // Khung thành sân 7: rộng 6m, cao 2.1m
   return (
     <group position={position} rotation={rotation}>
@@ -119,13 +169,24 @@ const Goal = ({ position, rotation }: { position: [number, number, number], rota
       </mesh>
       <mesh position={[0, 1.05, -0.6]} castShadow>
         <boxGeometry args={[6, 2.1, 1.2]} />
-        <meshStandardMaterial color="white" transparent opacity={0.15} side={THREE.DoubleSide} />
+        <meshStandardMaterial
+          color="white"
+          transparent
+          opacity={0.15}
+          side={THREE.DoubleSide}
+        />
       </mesh>
     </group>
   );
 };
 
-const Player = ({ position, color }: { position: [number, number, number], color: string }) => {
+const Player = ({
+  position,
+  color,
+}: {
+  position: [number, number, number];
+  color: string;
+}) => {
   return (
     <group position={position} castShadow>
       {/* Body */}
@@ -142,37 +203,49 @@ const Player = ({ position, color }: { position: [number, number, number], color
   );
 };
 
-const Players = ({ length, width }: { length: number, width: number }) => {
+const Players = ({ length, width }: { length: number; width: number }) => {
   const l = length / 2;
   const w = width / 2;
-  
+
   // Team 1 (Đỏ)
   const team1 = [
     [-l + 1.5, 0, 0], // Thủ môn
-    [-l + 8, 0, -w/3], // Hậu vệ
-    [-l + 8, 0, w/3], // Hậu vệ
-    [-l + 14, 0, -w/2.5], // Tiền vệ
+    [-l + 8, 0, -w / 3], // Hậu vệ
+    [-l + 8, 0, w / 3], // Hậu vệ
+    [-l + 14, 0, -w / 2.5], // Tiền vệ
     [-l + 13, 0, 0], // Tiền vệ trung tâm
-    [-l + 14, 0, w/2.5], // Tiền vệ
+    [-l + 14, 0, w / 2.5], // Tiền vệ
     [-2, 0, 0], // Tiền đạo
   ];
 
   // Team 2 (Xanh)
   const team2 = [
     [l - 1.5, 0, 0], // Thủ môn
-    [l - 8, 0, -w/3], // Hậu vệ
-    [l - 8, 0, w/3], // Hậu vệ
-    [l - 14, 0, -w/2.5], // Tiền vệ
+    [l - 8, 0, -w / 3], // Hậu vệ
+    [l - 8, 0, w / 3], // Hậu vệ
+    [l - 14, 0, -w / 2.5], // Tiền vệ
     [l - 13, 0, 0], // Tiền vệ trung tâm
-    [l - 14, 0, w/2.5], // Tiền vệ
+    [l - 14, 0, w / 2.5], // Tiền vệ
     [2, 0, 0], // Tiền đạo
   ];
 
   return (
     <group>
-      {team1.map((pos, i) => <Player key={`t1-${i}`} position={pos as [number,number,number]} color="#ef4444" />)}
-      {team2.map((pos, i) => <Player key={`t2-${i}`} position={pos as [number,number,number]} color="#3b82f6" />)}
-      
+      {team1.map((pos, i) => (
+        <Player
+          key={`t1-${i}`}
+          position={pos as [number, number, number]}
+          color="#ef4444"
+        />
+      ))}
+      {team2.map((pos, i) => (
+        <Player
+          key={`t2-${i}`}
+          position={pos as [number, number, number]}
+          color="#3b82f6"
+        />
+      ))}
+
       {/* Trái bóng */}
       <mesh position={[0, 0.15, 0]} castShadow>
         <sphereGeometry args={[0.15]} />
@@ -182,7 +255,13 @@ const Players = ({ length, width }: { length: number, width: number }) => {
   );
 };
 
-const LightPole = ({ position, rotation }: { position: [number, number, number], rotation: number }) => {
+const LightPole = ({
+  position,
+  rotation,
+}: {
+  position: [number, number, number];
+  rotation: number;
+}) => {
   return (
     <group position={position} rotation={[0, rotation, 0]}>
       {/* Cột */}
@@ -202,28 +281,40 @@ const LightPole = ({ position, rotation }: { position: [number, number, number],
       </mesh>
     </group>
   );
-}
+};
 
 // ========================
 // ========================
 // DÒNG MƯƠNG - phía sau sân (Z âm), lòng mương xanh có tường bao
 // ========================
-const Canal = ({ length, fieldHalfWidth }: { length: number, fieldHalfWidth: number }) => {
+const Canal = ({
+  length,
+  fieldHalfWidth,
+}: {
+  length: number;
+  fieldHalfWidth: number;
+}) => {
   const cZ = -(fieldHalfWidth + 14);
   return (
     <group>
       {/* Lòng mương (nước lõm xuống) */}
       <mesh position={[0, -0.2, cZ]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[length + 40, 7]} />
-        <meshStandardMaterial color="#22d3ee" transparent opacity={0.82} roughness={0.05} metalness={0.4} />
+        <meshStandardMaterial
+          color="#22d3ee"
+          transparent
+          opacity={0.82}
+          roughness={0.05}
+          metalness={0.4}
+        />
       </mesh>
-      
+
       {/* Tường bao mương bên trong (sát bờ sông) */}
       <mesh position={[0, 0.4, cZ + 3.6]} receiveShadow castShadow>
         <boxGeometry args={[length + 40, 1.2, 0.4]} />
         <meshStandardMaterial color="#9ca3af" roughness={0.7} />
       </mesh>
-      
+
       {/* Tường bao mương bên ngoài (mặt xa) */}
       <mesh position={[0, 0.4, cZ - 3.6]} receiveShadow castShadow>
         <boxGeometry args={[length + 40, 1.2, 0.4]} />
@@ -309,14 +400,26 @@ const CommunityCenter = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
       {[-8, -4.5, 4.5, 8].map((x, i) => (
         <mesh key={`w1${i}`} position={[x, 2.5, 6.55]}>
           <boxGeometry args={[2.2, 1.7, 0.08]} />
-          <meshStandardMaterial color="#bfdbfe" transparent opacity={0.65} roughness={0.1} metalness={0.2} />
+          <meshStandardMaterial
+            color="#bfdbfe"
+            transparent
+            opacity={0.65}
+            roughness={0.1}
+            metalness={0.2}
+          />
         </mesh>
       ))}
       {/* Cửa sổ tầng 2 */}
       {[-8, -4.5, 0, 4.5, 8].map((x, i) => (
         <mesh key={`w2${i}`} position={[x, 7, 6.55]}>
           <boxGeometry args={[2.2, 1.7, 0.08]} />
-          <meshStandardMaterial color="#bfdbfe" transparent opacity={0.65} roughness={0.1} metalness={0.2} />
+          <meshStandardMaterial
+            color="#bfdbfe"
+            transparent
+            opacity={0.65}
+            roughness={0.1}
+            metalness={0.2}
+          />
         </mesh>
       ))}
       {/* Biển hiệu đỏ */}
@@ -325,8 +428,12 @@ const CommunityCenter = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
         <meshStandardMaterial color="#dc2626" roughness={0.5} />
       </mesh>
       {/* Bậc thềm */}
-      {[0, 1, 2].map(i => (
-        <mesh key={`s${i}`} position={[0, 0.12 + i * 0.18, 7.1 + i * 0.35]} castShadow>
+      {[0, 1, 2].map((i) => (
+        <mesh
+          key={`s${i}`}
+          position={[0, 0.12 + i * 0.18, 7.1 + i * 0.35]}
+          castShadow
+        >
           <boxGeometry args={[5, 0.18, 0.7]} />
           <meshStandardMaterial color="#9ca3af" roughness={0.8} />
         </mesh>
@@ -358,21 +465,21 @@ const CommunityCenter = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
 // ========================
 const VietNamFlag = ({ position }: { position: [number, number, number] }) => {
   const meshRef = useRef<THREE.Mesh>(null);
-  
+
   const flagTexture = useMemo(() => {
-    if (typeof document === 'undefined') return null;
-    const canvas = document.createElement('canvas');
+    if (typeof document === "undefined") return null;
+    const canvas = document.createElement("canvas");
     canvas.width = 600;
     canvas.height = 400;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return null;
 
     // Nền đỏ
-    ctx.fillStyle = '#da251d';
+    ctx.fillStyle = "#da251d";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Sao vàng
-    ctx.fillStyle = '#ffcd00';
+    ctx.fillStyle = "#ffcd00";
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
     const outerRadius = 80;
@@ -415,7 +522,7 @@ const VietNamFlag = ({ position }: { position: [number, number, number] }) => {
         <cylinderGeometry args={[0.05, 0.08, 8]} />
         <meshStandardMaterial color="#d1d5db" metalness={0.8} />
       </mesh>
-      
+
       {/* Đế cột */}
       <mesh position={[0, 0.2, 0]} castShadow>
         <cylinderGeometry args={[0.4, 0.5, 0.4]} />
@@ -425,7 +532,13 @@ const VietNamFlag = ({ position }: { position: [number, number, number] }) => {
       {/* Lá cờ (treo ở ngọn cột) */}
       <mesh ref={meshRef} position={[1.5, 6.5, 0]} castShadow>
         <planeGeometry args={[3, 2, 20, 20]} />
-        {flagTexture && <meshStandardMaterial map={flagTexture} side={THREE.DoubleSide} roughness={0.6} />}
+        {flagTexture && (
+          <meshStandardMaterial
+            map={flagTexture}
+            side={THREE.DoubleSide}
+            roughness={0.6}
+          />
+        )}
       </mesh>
     </group>
   );
@@ -434,7 +547,13 @@ const VietNamFlag = ({ position }: { position: [number, number, number] }) => {
 // ========================
 // DẢI ĐÊ - phía TRƯỚC gần user (Z+)
 // ========================
-const Dyke = ({ length, fieldHalfWidth }: { length: number, fieldHalfWidth: number }) => {
+const Dyke = ({
+  length,
+  fieldHalfWidth,
+}: {
+  length: number;
+  fieldHalfWidth: number;
+}) => {
   const dZ = fieldHalfWidth + 12;
   return (
     <group>
@@ -447,12 +566,18 @@ const Dyke = ({ length, fieldHalfWidth }: { length: number, fieldHalfWidth: numb
         <meshStandardMaterial color="#a3a3a3" roughness={0.8} />
       </mesh>
       {/* Taluy cỏ phía sân */}
-      <mesh position={[0, 1.1, dZ - 5.5]} rotation={[-Math.PI / 2 + 0.55, 0, 0]}>
+      <mesh
+        position={[0, 1.1, dZ - 5.5]}
+        rotation={[-Math.PI / 2 + 0.55, 0, 0]}
+      >
         <planeGeometry args={[length + 50, 3.5]} />
         <meshStandardMaterial color="#4ade80" roughness={0.85} side={2} />
       </mesh>
       {/* Taluy cỏ phía ngoài */}
-      <mesh position={[0, 1.1, dZ + 5.5]} rotation={[-Math.PI / 2 - 0.55, 0, 0]}>
+      <mesh
+        position={[0, 1.1, dZ + 5.5]}
+        rotation={[-Math.PI / 2 - 0.55, 0, 0]}
+      >
         <planeGeometry args={[length + 50, 3.5]} />
         <meshStandardMaterial color="#4ade80" roughness={0.85} side={2} />
       </mesh>
@@ -460,7 +585,10 @@ const Dyke = ({ length, fieldHalfWidth }: { length: number, fieldHalfWidth: numb
       {[-21, -15, -9, -3, 3, 9, 15, 21].map((x, i) => (
         <mesh key={`b${i}`} position={[x, 2.8, dZ - 0.3]} castShadow>
           <sphereGeometry args={[0.9, 6, 5]} />
-          <meshStandardMaterial color={i % 2 === 0 ? "#16a34a" : "#15803d"} roughness={0.85} />
+          <meshStandardMaterial
+            color={i % 2 === 0 ? "#16a34a" : "#15803d"}
+            roughness={0.85}
+          />
         </mesh>
       ))}
       {/* Cột mốc */}
@@ -495,21 +623,33 @@ const VolleyballCourt = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
       </mesh>
       {/* Vạch biên ngang (trục X) */}
       {[-4.5, 4.5].map((z, i) => (
-        <mesh key={`vl${i}`} position={[0, 0.02, z]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh
+          key={`vl${i}`}
+          position={[0, 0.02, z]}
+          rotation={[-Math.PI / 2, 0, 0]}
+        >
           <planeGeometry args={[18, 0.08]} />
           <meshStandardMaterial color="white" roughness={0.5} />
         </mesh>
       ))}
       {/* Vạch biên dọc (trục Z) */}
       {[-9, 9].map((x, i) => (
-        <mesh key={`hl${i}`} position={[x, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh
+          key={`hl${i}`}
+          position={[x, 0.02, 0]}
+          rotation={[-Math.PI / 2, 0, 0]}
+        >
           <planeGeometry args={[0.08, 9]} />
           <meshStandardMaterial color="white" roughness={0.5} />
         </mesh>
       ))}
       {/* Đường giữa & tấn công */}
       {[0, -3, 3].map((x, i) => (
-        <mesh key={`cl${i}`} position={[x, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh
+          key={`cl${i}`}
+          position={[x, 0.02, 0]}
+          rotation={[-Math.PI / 2, 0, 0]}
+        >
           <planeGeometry args={[0.07, 9]} />
           <meshStandardMaterial color="white" roughness={0.5} />
         </mesh>
@@ -518,13 +658,22 @@ const VolleyballCourt = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
       {[-4.7, 4.7].map((z, i) => (
         <mesh key={`np${i}`} position={[0, 1.2, z]} castShadow>
           <cylinderGeometry args={[0.07, 0.07, 2.43, 8]} />
-          <meshStandardMaterial color="#78716c" metalness={0.6} roughness={0.4} />
+          <meshStandardMaterial
+            color="#78716c"
+            metalness={0.6}
+            roughness={0.4}
+          />
         </mesh>
       ))}
       {/* Lưới */}
       <mesh position={[0, 1.2, 0]}>
         <boxGeometry args={[0.05, 2, 9.5]} />
-        <meshStandardMaterial color="#e2e8f0" transparent opacity={0.3} wireframe />
+        <meshStandardMaterial
+          color="#e2e8f0"
+          transparent
+          opacity={0.3}
+          wireframe
+        />
       </mesh>
       {/* Dải trắng trên lưới */}
       <mesh position={[0, 2.33, 0]}>
@@ -533,7 +682,11 @@ const VolleyballCourt = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
       </mesh>
       {/* Cỏ xung quanh */}
       {[-7, 7].map((z, i) => (
-        <mesh key={`cg${i}`} position={[0, -0.01, z]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh
+          key={`cg${i}`}
+          position={[0, -0.01, z]}
+          rotation={[-Math.PI / 2, 0, 0]}
+        >
           <planeGeometry args={[22, 5]} />
           <meshStandardMaterial color="#166534" roughness={0.85} />
         </mesh>
@@ -547,22 +700,34 @@ const VolleyballCourt = ({ fieldHalfLength }: { fieldHalfLength: number }) => {
   );
 };
 
-
-
-const EnvironmentSetup = ({ length, width }: { length: number, width: number }) => {
+const EnvironmentSetup = ({
+  length,
+  width,
+}: {
+  length: number;
+  width: number;
+}) => {
   const hl = length / 2;
   const hw = width / 2;
-  
+
   return (
     <group>
       {/* Hành lang đi lại (gạch đỏ) xung quanh sân */}
-      <mesh position={[0, -0.02, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+      <mesh
+        position={[0, -0.02, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        receiveShadow
+      >
         <planeGeometry args={[length + 6, width + 6]} />
         <meshStandardMaterial color="#ea580c" roughness={0.9} />
       </mesh>
 
       {/* Nền đất bên ngoài rộng hơn để chứa quang cảnh */}
-      <mesh position={[0, -0.04, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+      <mesh
+        position={[0, -0.04, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        receiveShadow
+      >
         <planeGeometry args={[200, 200]} />
         <meshStandardMaterial color="#166534" roughness={1} />
       </mesh>
@@ -571,28 +736,54 @@ const EnvironmentSetup = ({ length, width }: { length: number, width: number }) 
       {/* Trái */}
       <mesh position={[-hl - 2, 2, 0]}>
         <boxGeometry args={[0.05, 4, width + 4]} />
-        <meshStandardMaterial color="#cbd5e1" transparent opacity={0.2} wireframe />
+        <meshStandardMaterial
+          color="#cbd5e1"
+          transparent
+          opacity={0.2}
+          wireframe
+        />
       </mesh>
       {/* Phải */}
       <mesh position={[hl + 2, 2, 0]}>
         <boxGeometry args={[0.05, 4, width + 4]} />
-        <meshStandardMaterial color="#cbd5e1" transparent opacity={0.2} wireframe />
+        <meshStandardMaterial
+          color="#cbd5e1"
+          transparent
+          opacity={0.2}
+          wireframe
+        />
       </mesh>
       {/* Trên */}
       <mesh position={[0, 2, -hw - 2]}>
         <boxGeometry args={[length + 4, 4, 0.05]} />
-        <meshStandardMaterial color="#cbd5e1" transparent opacity={0.2} wireframe />
+        <meshStandardMaterial
+          color="#cbd5e1"
+          transparent
+          opacity={0.2}
+          wireframe
+        />
       </mesh>
       {/* Dưới */}
       <mesh position={[0, 2, hw + 2]}>
         <boxGeometry args={[length + 4, 4, 0.05]} />
-        <meshStandardMaterial color="#cbd5e1" transparent opacity={0.2} wireframe />
+        <meshStandardMaterial
+          color="#cbd5e1"
+          transparent
+          opacity={0.2}
+          wireframe
+        />
       </mesh>
 
       {/* 4 Cột đèn góc */}
       <LightPole position={[-hl - 2.5, 0, -hw - 2.5]} rotation={Math.PI / 4} />
-      <LightPole position={[hl + 2.5, 0, -hw - 2.5]} rotation={Math.PI * 3 / 4} />
-      <LightPole position={[hl + 2.5, 0, hw + 2.5]} rotation={Math.PI * 5 / 4} />
+      <LightPole
+        position={[hl + 2.5, 0, -hw - 2.5]}
+        rotation={(Math.PI * 3) / 4}
+      />
+      <LightPole
+        position={[hl + 2.5, 0, hw + 2.5]}
+        rotation={(Math.PI * 5) / 4}
+      />
       <LightPole position={[-hl - 2.5, 0, hw + 2.5]} rotation={-Math.PI / 4} />
 
       {/* 2 Cột đèn giữa sân */}
@@ -613,14 +804,13 @@ const EnvironmentSetup = ({ length, width }: { length: number, width: number }) 
       <VolleyballCourt fieldHalfLength={hl} />
     </group>
   );
-}
+};
 
-
-const Field = ({ length, width }: { length: number, width: number }) => {
+const Field = ({ length, width }: { length: number; width: number }) => {
   const texture = useFieldTexture(length, width);
-  const actualLength = length - 4; 
+  const actualLength = length - 4;
   const actualWidth = width - 4;
-  
+
   return (
     <group>
       {/* Grass Field */}
@@ -628,11 +818,17 @@ const Field = ({ length, width }: { length: number, width: number }) => {
         <planeGeometry args={[length, width]} />
         {texture && <meshStandardMaterial map={texture} roughness={0.8} />}
       </mesh>
-      
+
       <EnvironmentSetup length={length} width={width} />
 
-      <Goal position={[-actualLength / 2, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
-      <Goal position={[actualLength / 2, 0, 0]} rotation={[0, -Math.PI / 2, 0]} />
+      <Goal
+        position={[-actualLength / 2, 0, 0]}
+        rotation={[0, Math.PI / 2, 0]}
+      />
+      <Goal
+        position={[actualLength / 2, 0, 0]}
+        rotation={[0, -Math.PI / 2, 0]}
+      />
 
       <Players length={actualLength} width={actualWidth} />
 
@@ -663,24 +859,33 @@ const Field = ({ length, width }: { length: number, width: number }) => {
   );
 };
 
-export default function FootballField3D({ length = 51, width = 32 }: { length?: number, width?: number }) {
+export default function FootballField3D({
+  length = 51,
+  width = 32,
+}: {
+  length?: number;
+  width?: number;
+}) {
   const canvasLength = length + 4;
   const canvasWidth = width + 4;
 
   return (
     <div className="w-full h-full bg-sky-100 rounded-xl overflow-hidden relative shadow-2xl border border-sky-200/50">
-      <Canvas shadows camera={{ position: [0, 40, 50], fov: 45 }} dpr={[1, 1.5]}>
-        
+      <Canvas
+        shadows
+        camera={{ position: [0, 40, 50], fov: 45 }}
+        dpr={[1, 1.5]}
+      >
         <Sky sunPosition={[100, 20, 100]} turbidity={0.3} rayleigh={0.5} />
-        
+
         {/* Ánh sáng ban ngày rực rỡ */}
         <ambientLight intensity={0.7} color="#ffffff" />
-        
+
         {/* Mặt trời */}
-        <directionalLight 
-          castShadow 
-          position={[50, 80, 30]} 
-          intensity={1.5} 
+        <directionalLight
+          castShadow
+          position={[50, 80, 30]}
+          intensity={1.5}
           color="#fdf4ce"
           shadow-mapSize={[1024, 1024]}
           shadow-camera-far={150}
@@ -689,32 +894,72 @@ export default function FootballField3D({ length = 51, width = 32 }: { length?: 
           shadow-camera-top={60}
           shadow-camera-bottom={-60}
         />
-        
+
         <Field length={canvasLength} width={canvasWidth} />
-        
-        <OrbitControls 
+
+        <OrbitControls
           enablePan={false}
           maxPolarAngle={Math.PI / 2 - 0.05}
           minDistance={10}
           maxDistance={90}
           enableDamping={true}
         />
-        <ContactShadows position={[0, -0.01, 0]} opacity={0.4} scale={100} blur={2} far={4.5} frames={1} resolution={512} />
+        <ContactShadows
+          position={[0, -0.01, 0]}
+          opacity={0.4}
+          scale={100}
+          blur={2}
+          far={4.5}
+          frames={1}
+          resolution={512}
+        />
       </Canvas>
-      
-      <Loader 
-        containerStyles={{ backgroundColor: '#f0f9ff' }}
-        innerStyles={{ backgroundColor: '#cbd5e1', height: '6px', width: '250px', borderRadius: '4px' }}
-        barStyles={{ backgroundColor: '#10b981', height: '6px', borderRadius: '4px' }}
-        dataStyles={{ color: '#047857', fontWeight: 'bold', fontSize: '14px', marginTop: '16px', fontFamily: 'sans-serif' }}
+
+      <Loader
+        containerStyles={{ backgroundColor: "#f0f9ff" }}
+        innerStyles={{
+          backgroundColor: "#cbd5e1",
+          height: "6px",
+          width: "250px",
+          borderRadius: "4px",
+        }}
+        barStyles={{
+          backgroundColor: "#10b981",
+          height: "6px",
+          borderRadius: "4px",
+        }}
+        dataStyles={{
+          color: "#047857",
+          fontWeight: "bold",
+          fontSize: "14px",
+          marginTop: "16px",
+          fontFamily: "sans-serif",
+        }}
         dataInterpolation={(p) => `Đang dựng mô hình 3D... ${p.toFixed(0)}%`}
       />
-      
+
       <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm text-white px-4 py-3 rounded-lg border border-white/10 shadow-lg pointer-events-none">
-        <p className="font-bold text-lg text-emerald-400">Sân Bóng Phương Viên</p>
-        <p className="text-sm text-slate-200 mt-1">Kích thước hiển thị: {length}m x {width}m</p>
+        <p className="font-bold text-lg text-emerald-400">
+          Sân Bóng Phương Viên
+        </p>
+        <p className="text-sm text-slate-200 mt-1">
+          Kích thước hiển thị: {length}m x {width}m
+        </p>
         <div className="flex items-center gap-2 mt-2 text-xs text-slate-400 bg-white/5 p-2 rounded">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
           <p>Kéo chuột để xoay, lăn để zoom</p>
         </div>
       </div>
