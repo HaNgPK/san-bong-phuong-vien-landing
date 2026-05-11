@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Copy, CheckCircle2, Edit3, User, MapPin, XCircle } from "lucide-react";
+import { Copy, CheckCircle2, Edit3, User, MapPin, XCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BANK_DETAILS } from "@/data/mockData";
 
@@ -67,6 +67,24 @@ export default function PaymentSection() {
   // Generate dynamic QR URL based on the user's input message
   const dynamicQrUrl = `https://img.vietqr.io/image/techcombank-${BANK_DETAILS.accountNumber}-compact2.jpg?accountName=${encodeURIComponent(BANK_DETAILS.accountName)}&amount=0&addInfo=${encodeURIComponent(transferMessage)}`;
 
+  const handleDownloadQR = async () => {
+    try {
+      const response = await fetch(dynamicQrUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `QR_Ung_Ho_San_Bong.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Lỗi khi tải mã QR:", error);
+      window.open(dynamicQrUrl, "_blank");
+    }
+  };
+
   return (
     <section id="payment-section" className="py-10 md:py-16 bg-emerald-900 text-white relative">
       <div className="absolute inset-0 overflow-hidden">
@@ -95,6 +113,15 @@ export default function PaymentSection() {
               />
             </div>
             <p className="text-sm font-bold text-gray-500 uppercase">Quét mã VietQR</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4 flex items-center gap-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50 w-full md:w-auto justify-center"
+              onClick={handleDownloadQR}
+            >
+              <Download className="w-4 h-4" />
+              Tải mã QR
+            </Button>
           </div>
 
           <div className="md:w-7/12 p-6 md:p-8 flex flex-col justify-center space-y-5 md:space-y-6">

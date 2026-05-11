@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CheckCircle2, Copy, User, MapPin, Edit3, X } from "lucide-react";
+import { CheckCircle2, Copy, User, MapPin, Edit3, X, Download } from "lucide-react";
 import { BANK_DETAILS } from "../../data/mockData";
 
 export default function QuickDonateSection() {
@@ -68,6 +68,24 @@ export default function QuickDonateSection() {
   const finalDisplayMessage = isMessageEdited ? manualMessage : defaultDisplayMessage;
 
   const qrUrl = `https://img.vietqr.io/image/techcombank-${BANK_DETAILS.accountNumber}-compact2.png?amount=${calculatedAmount}&addInfo=${encodeURIComponent(finalTransferMessage)}&accountName=${encodeURIComponent(BANK_DETAILS.accountName)}`;
+
+  const handleDownloadQR = async () => {
+    try {
+      const response = await fetch(qrUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `QR_Ung_Ho_San_Bong.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Lỗi khi tải mã QR:", error);
+      window.open(qrUrl, "_blank");
+    }
+  };
 
   const handleOptionClick = (val: number | "custom") => {
     setSelectedOption(val);
@@ -175,6 +193,13 @@ export default function QuickDonateSection() {
                   className={`w-48 md:w-56 h-auto object-contain rounded-xl transition-all duration-300 ${isUpdatingQR ? 'opacity-30 scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'}`} 
                 />
               </div>
+              <button
+                onClick={handleDownloadQR}
+                className="mt-4 flex items-center gap-2 px-4 py-2 bg-white text-emerald-700 rounded-lg hover:bg-emerald-50 transition-colors border border-emerald-200 text-sm font-semibold shadow-sm"
+              >
+                <Download size={16} />
+                Tải mã QR
+              </button>
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-500 mb-1">Số tiền quyên góp ({currentSqm} m²)</p>
                 <p className="text-3xl font-black text-emerald-600 tracking-tight">{formatCurrency(calculatedAmount)}<span className="text-lg text-emerald-400 ml-1">VNĐ</span></p>
