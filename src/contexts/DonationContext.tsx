@@ -43,9 +43,11 @@ const DonationContext = createContext<DonationContextType | undefined>(
   undefined,
 );
 
-export function DonationProvider({ children }: { children: ReactNode }) {
-  const [donations, setDonations] = useState<Donation[]>([]);
-  const [loading, setLoading] = useState(true);
+export function DonationProvider({ children, initialCsvText }: { children: ReactNode, initialCsvText?: string }) {
+  const [donations, setDonations] = useState<Donation[]>(() => {
+    return initialCsvText ? parseCSV(initialCsvText) : [];
+  });
+  const [loading, setLoading] = useState(donations.length === 0);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
@@ -66,7 +68,18 @@ export function DonationProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    fetchData();
+    if (donations.length === 0) {
+      fetchData();
+    } else {
+      // Cập nhật ngầm để đảm bảo dữ liệu mới nhất mà không gây loading screen
+      fetch(SHEET_CSV_URL + '&t=' + new Date().getTime())
+        .then(res => res.text())
+        .then(csvText => {
+          const parsed = parseCSV(csvText);
+          if (parsed.length > 0) setDonations(parsed);
+        })
+        .catch(err => console.error("Lỗi cập nhật ngầm:", err));
+    }
   }, []);
 
   const currentRaised = donations.reduce((sum, d) => sum + d.amount, 0);

@@ -13,6 +13,7 @@ import BudgetTimelineSection from "../components/landing/BudgetTimelineSection";
 import SchedulePlanSection from "../components/landing/SchedulePlanSection";
 import PaymentSection from "../components/landing/PaymentSection";
 import Footer from "../components/landing/Footer";
+import ScrollToTop from "../components/ui/ScrollToTop";
 import { motion, Variants } from "framer-motion";
 import { DonationProvider } from "../contexts/DonationContext";
 
@@ -81,6 +82,7 @@ export default function LandingPage() {
         </ScrollReveal>
         
         <Footer />
+        <ScrollToTop />
       </div>
     </DonationProvider>
   );

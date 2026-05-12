@@ -33,15 +33,30 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
+export const revalidate = 300; // 5 phút cập nhật tĩnh một lần trên Vercel
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1yHmRSx16zLBLQubtJ4RYhhfxixfetLIMsUcA-97kkjQ/export?format=csv";
+  let initialCsvText = "";
+  
+  try {
+    // Gọi API trên Server (Vercel) với cơ chế cache 5 phút
+    const res = await fetch(SHEET_CSV_URL, { next: { revalidate: 300 } });
+    if (res.ok) {
+      initialCsvText = await res.text();
+    }
+  } catch (error) {
+    console.error("Lỗi khi tải dữ liệu SSR:", error);
+  }
+
   return (
     <html lang="vi">
       <body className={inter.className}>
-        <DonationProvider>
+        <DonationProvider initialCsvText={initialCsvText}>
           {children}
         </DonationProvider>
       </body>

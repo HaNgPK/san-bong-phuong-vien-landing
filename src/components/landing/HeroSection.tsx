@@ -9,8 +9,36 @@ export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progressSlider, setProgressSlider] = useState(50);
   const [isAutoAnimating, setIsAutoAnimating] = useState(false);
+  const [displayAmount, setDisplayAmount] = useState(0);
   
   const { currentRaised, fundingGoal, loading, donations } = useDonations();
+
+  // Hiệu ứng số đếm (CountUp) cho số tiền
+  useEffect(() => {
+    let startTime: number;
+    const duration = 2500; // 2.5 giây
+    const startValue = 0; // Luôn chạy hiệu ứng từ 0
+    const targetValue = currentRaised;
+
+    if (targetValue === 0) return;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      
+      if (progress < duration) {
+        // Easing function (easeOutExpo) để số chạy nhanh lúc đầu, chậm dần về sau
+        const easeProgress = progress === duration ? 1 : 1 - Math.pow(2, -10 * progress / duration);
+        const nextValue = Math.floor(startValue + (targetValue - startValue) * easeProgress);
+        setDisplayAmount(nextValue);
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayAmount(targetValue);
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }, [currentRaised]);
 
   // Danh sách ảnh sân cũ
   const oldFieldImages = [
@@ -236,7 +264,7 @@ export default function HeroSection() {
           <div className="relative z-10 flex flex-col items-center mb-6 mt-2">
             <p className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-3">TỔNG SỐ TIỀN ĐÃ CHUNG TAY</p>
             <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 drop-shadow-sm mb-2">
-              {formatCurrency(currentRaised)}
+              {formatCurrency(displayAmount > 0 ? displayAmount : currentRaised)}
             </h2>
             <div className="flex items-center gap-2 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100/50 shadow-sm mt-2">
               <span className="text-lg">🤝</span>
