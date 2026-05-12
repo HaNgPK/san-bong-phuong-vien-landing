@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Copy, CheckCircle2, Edit3, User, MapPin, XCircle, Download } from "lucide-react";
+import { Copy, CheckCircle2, Edit3, User, MapPin, XCircle, Download, ExternalLink, Loader2, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BANK_DETAILS } from "@/data/mockData";
 
@@ -13,6 +13,9 @@ export default function PaymentSection() {
   const [isInitialRender, setIsInitialRender] = useState(true);
   const [isClearingName, setIsClearingName] = useState(false);
   const [isClearingGroup, setIsClearingGroup] = useState(false);
+  
+  const [amount, setAmount] = useState<string>("");
+  const [isCreatingPayment, setIsCreatingPayment] = useState(false);
 
   const handleClearName = () => {
     setIsClearingName(true);
@@ -64,8 +67,44 @@ export default function PaymentSection() {
     ? `${name.trim() ? name.trim().toUpperCase() : "HO TEN"} ${group.trim() ? group.trim().toUpperCase() : "THON"} ung ho san bong`
     : BANK_DETAILS.transferSyntax;
 
+  const parsedAmount = parseInt(amount.replace(/\D/g, '')) || 0;
   // Generate dynamic QR URL based on the user's input message
-  const dynamicQrUrl = `https://img.vietqr.io/image/techcombank-${BANK_DETAILS.accountNumber}-compact2.jpg?accountName=${encodeURIComponent(BANK_DETAILS.accountName)}&amount=0&addInfo=${encodeURIComponent(transferMessage)}`;
+  const dynamicQrUrl = `https://img.vietqr.io/image/techcombank-${BANK_DETAILS.accountNumber}-compact2.jpg?accountName=${encodeURIComponent(BANK_DETAILS.accountName)}&amount=${parsedAmount}&addInfo=${encodeURIComponent(transferMessage)}`;
+
+  const handlePayosPayment = async () => {
+    const numAmount = parseInt(amount.replace(/\D/g, ''));
+    if (!numAmount || numAmount < 10000) {
+      alert("Vui lòng nhập số tiền (tối thiểu 10.000đ) để sử dụng cổng thanh toán tự động.");
+      return;
+    }
+    
+    setIsCreatingPayment(true);
+    try {
+      const response = await fetch('/api/payos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          amount: numAmount,
+          description: displayMessage, // Let backend trim to 25 chars
+          returnUrl: window.location.href,
+          cancelUrl: window.location.href,
+        })
+      });
+      const data = await response.json();
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        alert("Lỗi: " + (data.error || "Không thể tạo link thanh toán"));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Đã xảy ra lỗi khi kết nối cổng thanh toán.");
+    } finally {
+      setIsCreatingPayment(false);
+    }
+  };
 
   const handleDownloadQR = async () => {
     try {
@@ -122,6 +161,25 @@ export default function PaymentSection() {
               <Download className="w-4 h-4" />
               Tải mã QR
             </Button>
+
+            <div className="w-full mt-6 flex flex-col items-center">
+              <div className="flex items-center gap-2 w-full max-w-[250px] mb-3">
+                <div className="h-px bg-gray-200 flex-1"></div>
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Hoặc</span>
+                <div className="h-px bg-gray-200 flex-1"></div>
+              </div>
+              <button
+                onClick={handlePayosPayment}
+                disabled={isCreatingPayment}
+                className="w-full max-w-[250px] flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all disabled:opacity-70"
+              >
+                {isCreatingPayment ? <Loader2 size={18} className="animate-spin" /> : <ExternalLink size={18} />}
+                Mở App Ngân Hàng
+              </button>
+              <p className="text-[11px] text-gray-500 mt-2 text-center w-full max-w-[250px] font-medium leading-tight">
+                Vui lòng nhập "Số tiền" bên cạnh trước khi bấm.
+              </p>
+            </div>
           </div>
 
           <div className="md:w-7/12 p-6 md:p-8 flex flex-col justify-center space-y-5 md:space-y-6">
@@ -201,6 +259,26 @@ export default function PaymentSection() {
                   <button 
                     onClick={handleClearGroup}
                     className={`absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 transition-all duration-300 ease-out transform z-30 ${group && !isClearingGroup ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90 pointer-events-none'}`}
+                    title="Xóa"
+                  >
+                    <XCircle className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="relative group/input overflow-hidden rounded-lg sm:col-span-2">
+                  <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 transition-colors group-focus-within/input:text-yellow-600 z-10" />
+                  <input 
+                    type="text" 
+                    value={amount}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      setAmount(val ? new Intl.NumberFormat('vi-VN').format(Number(val)) : '');
+                    }}
+                    placeholder="Số tiền quyên góp (Cần thiết nếu dùng Mở App Ngân Hàng)"
+                    className="w-full pl-9 pr-9 py-2 border border-yellow-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-shadow shadow-sm bg-white relative z-10 font-bold text-emerald-700"
+                  />
+                  <button 
+                    onClick={() => setAmount("")}
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 transition-all duration-300 ease-out transform z-30 ${amount ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90 pointer-events-none'}`}
                     title="Xóa"
                   >
                     <XCircle className="w-4 h-4" />

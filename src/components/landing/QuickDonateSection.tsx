@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CheckCircle2, Copy, User, MapPin, Edit3, X, Download } from "lucide-react";
+import { CheckCircle2, Copy, User, MapPin, Edit3, X, Download, ExternalLink, Loader2 } from "lucide-react";
 import { BANK_DETAILS } from "../../data/mockData";
 
 export default function QuickDonateSection() {
@@ -16,6 +16,7 @@ export default function QuickDonateSection() {
   
   const [isMessageEdited, setIsMessageEdited] = useState(false);
   const [manualMessage, setManualMessage] = useState("");
+  const [isCreatingPayment, setIsCreatingPayment] = useState(false);
 
   useEffect(() => {
     setIsUpdatingQR(true);
@@ -84,6 +85,35 @@ export default function QuickDonateSection() {
     } catch (error) {
       console.error("Lỗi khi tải mã QR:", error);
       window.open(qrUrl, "_blank");
+    }
+  };
+
+  const handlePayosPayment = async () => {
+    setIsCreatingPayment(true);
+    try {
+      const response = await fetch('/api/payos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          amount: calculatedAmount,
+          description: finalDisplayMessage,
+          returnUrl: window.location.href,
+          cancelUrl: window.location.href,
+        })
+      });
+      const data = await response.json();
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        alert("Lỗi: " + (data.error || "Không thể tạo link thanh toán"));
+      }
+    } catch (err) {
+      console.error("PayOS Error:", err);
+      alert("Đã xảy ra lỗi khi kết nối cổng thanh toán.");
+    } finally {
+      setIsCreatingPayment(false);
     }
   };
 
@@ -200,6 +230,26 @@ export default function QuickDonateSection() {
                 <Download size={16} />
                 Tải mã QR
               </button>
+
+              <div className="w-full mt-6 flex flex-col items-center">
+                <div className="flex items-center gap-2 w-full max-w-[250px] mb-3">
+                  <div className="h-px bg-emerald-200 flex-1"></div>
+                  <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">Hoặc</span>
+                  <div className="h-px bg-emerald-200 flex-1"></div>
+                </div>
+                <button
+                  onClick={handlePayosPayment}
+                  disabled={isCreatingPayment}
+                  className="w-full max-w-[250px] flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all disabled:opacity-70"
+                >
+                  {isCreatingPayment ? <Loader2 size={18} className="animate-spin" /> : <ExternalLink size={18} />}
+                  Mở App Ngân Hàng
+                </button>
+                <p className="text-[11px] text-emerald-700/80 mt-2 text-center w-full max-w-[250px] font-medium leading-tight">
+                  Tự động điền số tiền & nội dung, không cần nhập tay.
+                </p>
+              </div>
+
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-500 mb-1">Số tiền quyên góp ({currentSqm} m²)</p>
                 <p className="text-3xl font-black text-emerald-600 tracking-tight">{formatCurrency(calculatedAmount)}<span className="text-lg text-emerald-400 ml-1">VNĐ</span></p>
