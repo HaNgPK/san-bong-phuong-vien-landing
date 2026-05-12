@@ -60,11 +60,11 @@ export const BUDGET_BREAKDOWN = [
 ];
 
 export const BANK_DETAILS = {
-  bankName: "Techcombank",
-  accountNumber: "3000572000",
+  bankName: "MBBank (Ngân hàng Quân Đội)",
+  accountNumber: "0965305720",
   accountName: "NGUYEN PHAM KHAC HA",
   transferSyntax: "HO TEN THON ung ho san bong",
-  qrCodeUrl: "https://img.vietqr.io/image/techcombank-3000572000-compact2.jpg?accountName=NGUYEN%20PHAM%20KHAC%20HA&amount=0&addInfo=ung%20ho%20san%20bong"
+  qrCodeUrl: "https://img.vietqr.io/image/mb-0965305720-compact2.jpg?accountName=NGUYEN%20PHAM%20KHAC%20HA&amount=0&addInfo=ung%20ho%20san%20bong"
 };
 
 // Danh sách ảnh giải đấu (Đã lấy trực tiếp từ Album ImgBB của bạn)

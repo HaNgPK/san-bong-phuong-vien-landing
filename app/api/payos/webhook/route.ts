@@ -18,7 +18,7 @@ export async function POST(req: Request) {
        return NextResponse.json({ success: false, message: "Thiếu thông tin data" });
     }
 
-    const { amount, description, orderCode } = data;
+    const { amount, description, orderCode, counterAccountName } = data;
 
     // Chuẩn bị thông tin ghi vào Google Sheets
     const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
@@ -59,14 +59,33 @@ export async function POST(req: Request) {
     const today = new Date();
     const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
 
+    // Cố gắng lấy Tên chủ tài khoản từ ngân hàng (Nếu ngân hàng đó có hỗ trợ trả về)
+    // Nếu không có, sẽ tự động cắt Tên người gửi ra khỏi nội dung chuyển khoản
+    let senderName = counterAccountName || 'Người đóng góp (PayOS)';
+    const transferMsg = description || '';
+    
+    // Nếu ngân hàng KHÔNG trả về tên chủ tài khoản, ta mới dùng cách cắt chữ
+    if (!counterAccountName && transferMsg) {
+      const lowerDesc = transferMsg.toLowerCase();
+      const ungHoIndex = lowerDesc.indexOf('ung ho');
+      
+      if (ungHoIndex > 0) {
+        // Lấy phần trước chữ "ung ho" làm Tên người gửi
+        senderName = transferMsg.substring(0, ungHoIndex).trim();
+      } else {
+        // Nếu không có chữ "ung ho", lấy toàn bộ nội dung làm Tên người gửi luôn
+        senderName = transferMsg.trim();
+      }
+    }
+
     // Dữ liệu dòng mới
     const rowData = [
       [
         orderCode || Date.now().toString().slice(-8), // Mã giao dịch từ PayOS
         formattedDate, // Ngày tháng DD/MM/YYYY
         'Cá nhân', // Mặc định Phân loại là Cá nhân
-        'Người đóng góp (PayOS)', // Tên người gửi (PayOS không cung cấp tên trực tiếp, nên tạm để mặc định)
-        description || '', // Lời nhắn chuyển khoản
+        senderName, // Tên người gửi (Đã được tách tự động)
+        transferMsg, // Lời nhắn chuyển khoản (Giữ nguyên gốc)
         amount || 0, // Số tiền
         'CK' // Hình Thức (Chuyển Khoản) - Bắt buộc là CK!
       ],

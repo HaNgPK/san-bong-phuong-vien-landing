@@ -69,7 +69,7 @@ export default function PaymentSection() {
 
   const parsedAmount = parseInt(amount.replace(/\D/g, '')) || 0;
   // Generate dynamic QR URL based on the user's input message
-  const dynamicQrUrl = `https://img.vietqr.io/image/techcombank-${BANK_DETAILS.accountNumber}-compact2.jpg?accountName=${encodeURIComponent(BANK_DETAILS.accountName)}&amount=${parsedAmount}&addInfo=${encodeURIComponent(transferMessage)}`;
+  const dynamicQrUrl = `https://img.vietqr.io/image/mb-${BANK_DETAILS.accountNumber}-compact2.jpg?accountName=${encodeURIComponent(BANK_DETAILS.accountName)}&amount=${parsedAmount}&addInfo=${encodeURIComponent(transferMessage)}`;
 
   const handlePayosPayment = async () => {
     const numAmount = parseInt(amount.replace(/\D/g, ''));

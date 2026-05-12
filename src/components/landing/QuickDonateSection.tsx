@@ -68,7 +68,7 @@ export default function QuickDonateSection() {
   const finalTransferMessage = isMessageEdited ? manualMessage : defaultTransferMessage;
   const finalDisplayMessage = isMessageEdited ? manualMessage : defaultDisplayMessage;
 
-  const qrUrl = `https://img.vietqr.io/image/techcombank-${BANK_DETAILS.accountNumber}-compact2.png?amount=${calculatedAmount}&addInfo=${encodeURIComponent(finalTransferMessage)}&accountName=${encodeURIComponent(BANK_DETAILS.accountName)}`;
+  const qrUrl = `https://img.vietqr.io/image/mb-${BANK_DETAILS.accountNumber}-compact2.png?amount=${calculatedAmount}&addInfo=${encodeURIComponent(finalTransferMessage)}&accountName=${encodeURIComponent(BANK_DETAILS.accountName)}`;
 
   const handleDownloadQR = async () => {
     try {
@@ -260,7 +260,7 @@ export default function QuickDonateSection() {
             <div className="w-full md:w-3/5 p-6 md:p-8 space-y-6">
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-1">Thông tin chuyển khoản</h3>
-                <p className="text-gray-500 text-sm">Techcombank - {BANK_DETAILS.accountName}</p>
+                <p className="text-gray-500 text-sm">{BANK_DETAILS.bankName} - {BANK_DETAILS.accountName}</p>
               </div>
 
               <div className="space-y-4">

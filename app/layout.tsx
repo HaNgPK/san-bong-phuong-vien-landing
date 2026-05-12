@@ -28,6 +28,9 @@ export const metadata = {
     description: 'Chỉ với 280.000đ để phủ xanh 1 mét vuông sân bóng. Cùng chung tay mang lại sân chơi khang trang cho thanh niên làng!',
     images: ['https://images.unsplash.com/photo-1518605368461-1e1e38cd3543?q=80&w=1200&auto=format&fit=crop'],
   },
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
