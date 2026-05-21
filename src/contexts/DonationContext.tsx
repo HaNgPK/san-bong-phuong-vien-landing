@@ -114,7 +114,20 @@ export function DonationProvider({ children, initialCsvText }: { children: React
     }, [] as Donation[]);
 
     return grouped
-      .sort((a, b) => b.amount - a.amount)
+      .sort((a, b) => {
+        if (b.amount !== a.amount) {
+          return b.amount - a.amount;
+        }
+        // Nếu cùng số tiền, ưu tiên người có đóng góp mới nhất
+        const dateA = parseDateString(a.date);
+        const dateB = parseDateString(b.date);
+        if (dateB !== dateA) {
+          return dateB - dateA;
+        }
+        const idA = typeof a.id === "number" ? a.id : parseInt(a.id, 10) || 0;
+        const idB = typeof b.id === "number" ? b.id : parseInt(b.id, 10) || 0;
+        return idB - idA;
+      })
       .map((d, index) => ({ ...d, rank: index + 1 }));
   };
 
@@ -176,6 +189,19 @@ function parseCSVLine(text: string): string[] {
   return result;
 }
 
+function parseDateString(dateStr: string): number {
+  if (!dateStr) return 0;
+  const parts = dateStr.split("/");
+  if (parts.length === 3) {
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // month is 0-indexed in JS
+    const year = parseInt(parts[2], 10);
+    return new Date(year, month, day).getTime();
+  }
+  const parsed = Date.parse(dateStr);
+  return isNaN(parsed) ? 0 : parsed;
+}
+
 function parseCSV(text: string): Donation[] {
   const lines = text.split("\n");
   const result: Donation[] = [];
@@ -207,5 +233,15 @@ function parseCSV(text: string): Donation[] {
     }
   }
 
-  return result;
+  // Sắp xếp thời gian mới nhất lên đầu, nếu trùng ngày thì xếp theo thứ tự dòng từ dưới lên trước
+  return result.sort((a, b) => {
+    const dateA = parseDateString(a.date);
+    const dateB = parseDateString(b.date);
+    if (dateB !== dateA) {
+      return dateB - dateA;
+    }
+    const idA = typeof a.id === "number" ? a.id : parseInt(a.id, 10) || 0;
+    const idB = typeof b.id === "number" ? b.id : parseInt(b.id, 10) || 0;
+    return idB - idA;
+  });
 }

@@ -4,8 +4,10 @@ import {
   ArrowRight,
   Calendar,
   MessageCircle,
-  Medal,
   RefreshCw,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
@@ -19,18 +21,34 @@ import {
 import { Button } from "@/components/ui/button";
 import { useDonations } from "@/contexts/DonationContext";
 import { formatCurrency, getCategoryColor } from "@/lib/format";
-import CertificateModal from "./CertificateModal";
+// import CertificateModal from "./CertificateModal";
+
+function parseDateString(dateStr: string): number {
+  if (!dateStr) return 0;
+  const parts = dateStr.split("/");
+  if (parts.length === 3) {
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // 0-indexed month
+    const year = parseInt(parts[2], 10);
+    return new Date(year, month, day).getTime();
+  }
+  const parsed = Date.parse(dateStr);
+  return isNaN(parsed) ? 0 : parsed;
+}
 
 export default function TransparencySection() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Ẩn state liên quan đến CertificateModal để tránh lỗi biến không sử dụng
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [selectedDonation, setSelectedDonation] = useState<{
-    name: string;
-    amount: number;
-  } | null>(null);
+  // const [selectedDonation, setSelectedDonation] = useState<{
+  //   name: string;
+  //   amount: number;
+  // } | null>(null);
 
   const { donations, loading, refreshData } = useDonations();
+  const [sortField, setSortField] = useState<"date" | "category" | "amount">("date");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -38,16 +56,44 @@ export default function TransparencySection() {
     setTimeout(() => setIsRefreshing(false), 500); // UI feedback delay
   };
 
+  const handleSort = (field: "date" | "category" | "amount") => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("desc");
+    }
+  };
+
   const filteredDonations = useMemo(() => {
-    if (!searchQuery.trim()) return donations;
-    const lowerQuery = searchQuery.toLowerCase();
-    return donations.filter(
-      (d) =>
-        d.name.toLowerCase().includes(lowerQuery) ||
-        d.message.toLowerCase().includes(lowerQuery) ||
-        d.category.toLowerCase().includes(lowerQuery),
-    );
-  }, [searchQuery, donations]);
+    let result = [...donations];
+
+    // Lọc theo từ khóa tìm kiếm
+    if (searchQuery.trim()) {
+      const lowerQuery = searchQuery.toLowerCase();
+      result = result.filter(
+        (d) =>
+          d.name.toLowerCase().includes(lowerQuery) ||
+          d.message.toLowerCase().includes(lowerQuery) ||
+          d.category.toLowerCase().includes(lowerQuery),
+      );
+    }
+
+    // Sắp xếp theo cột
+    result.sort((a, b) => {
+      let comparison = 0;
+      if (sortField === "date") {
+        comparison = parseDateString(a.date) - parseDateString(b.date);
+      } else if (sortField === "category") {
+        comparison = a.category.localeCompare(b.category, "vi");
+      } else if (sortField === "amount") {
+        comparison = a.amount - b.amount;
+      }
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+
+    return result;
+  }, [searchQuery, donations, sortField, sortDirection]);
 
   return (
     <section
@@ -76,7 +122,8 @@ export default function TransparencySection() {
               />
               Làm mới
             </Button>
-            <Button
+            {/* Ẩn chức năng Tạo Chứng Nhận theo yêu cầu */}
+            {/* <Button
               onClick={() => {
                 setSelectedDonation(null);
                 setIsModalOpen(true);
@@ -85,7 +132,7 @@ export default function TransparencySection() {
             >
               <Medal className="w-4 h-4 mr-2" />
               Tạo Chứng Nhận
-            </Button>
+            </Button> */}
             <div className="relative w-full sm:w-64 lg:w-80">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -99,12 +146,13 @@ export default function TransparencySection() {
           </div>
         </div>
 
-        <CertificateModal
+        {/* Ẩn CertificateModal theo yêu cầu */}
+        {/* <CertificateModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           initialName={selectedDonation?.name}
           initialAmount={selectedDonation?.amount}
-        />
+        /> */}
 
         <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-2xl bg-gray-50/50">
           {/* GIAO DIỆN DESKTOP (TABLE) */}
@@ -112,11 +160,39 @@ export default function TransparencySection() {
             <Table className="bg-white min-w-[700px]">
               <TableHeader className="bg-gray-50 sticky top-0 z-10 shadow-sm">
                 <TableRow>
-                  <TableHead className="w-[120px] font-bold text-gray-700 bg-gray-50">
-                    Ngày
+                  <TableHead 
+                    className="w-[120px] font-bold text-gray-700 bg-gray-50 cursor-pointer select-none hover:bg-gray-100 hover:text-emerald-700 transition-colors"
+                    onClick={() => handleSort("date")}
+                  >
+                    <div className="flex items-center gap-1">
+                      Ngày
+                      {sortField === "date" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="w-3.5 h-3.5 text-emerald-600" />
+                        ) : (
+                          <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="w-3 h-3 text-gray-400 opacity-60" />
+                      )}
+                    </div>
                   </TableHead>
-                  <TableHead className="w-[140px] font-bold text-gray-700 bg-gray-50">
-                    Phân loại
+                  <TableHead 
+                    className="w-[140px] font-bold text-gray-700 bg-gray-50 cursor-pointer select-none hover:bg-gray-100 hover:text-emerald-700 transition-colors"
+                    onClick={() => handleSort("category")}
+                  >
+                    <div className="flex items-center gap-1">
+                      Phân loại
+                      {sortField === "category" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="w-3.5 h-3.5 text-emerald-600" />
+                        ) : (
+                          <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="w-3 h-3 text-gray-400 opacity-60" />
+                      )}
+                    </div>
                   </TableHead>
                   <TableHead className="font-bold text-gray-700 bg-gray-50">
                     Người gửi
@@ -124,10 +200,25 @@ export default function TransparencySection() {
                   <TableHead className="font-bold text-gray-700 bg-gray-50">
                     Lời nhắn
                   </TableHead>
-                  <TableHead className="text-right font-bold text-gray-700 bg-gray-50">
-                    Số tiền
+                  <TableHead 
+                    className="text-right font-bold text-gray-700 bg-gray-50 cursor-pointer select-none hover:bg-gray-100 hover:text-emerald-700 transition-colors"
+                    onClick={() => handleSort("amount")}
+                  >
+                    <div className="flex items-center justify-end gap-1">
+                      Số tiền
+                      {sortField === "amount" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="w-3.5 h-3.5 text-emerald-600" />
+                        ) : (
+                          <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="w-3 h-3 text-gray-400 opacity-60" />
+                      )}
+                    </div>
                   </TableHead>
-                  <TableHead className="w-[50px] bg-gray-50"></TableHead>
+                  {/* Ẩn cột hành động Tạo Chứng Nhận */}
+                  {/* <TableHead className="w-[50px] bg-gray-50"></TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -158,7 +249,8 @@ export default function TransparencySection() {
                       <TableCell className="text-right font-bold text-emerald-600 text-lg">
                         +{formatCurrency(donation.amount)}
                       </TableCell>
-                      <TableCell>
+                      {/* Ẩn chức năng Tạo Chứng Nhận trên từng dòng giao dịch */}
+                      {/* <TableCell>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -174,7 +266,7 @@ export default function TransparencySection() {
                         >
                           <Medal className="w-4 h-4" />
                         </Button>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   ))
                 ) : (
@@ -226,7 +318,8 @@ export default function TransparencySection() {
                         "{donation.message}"
                       </div>
                     )}
-                    <Button
+                    {/* Ẩn chức năng Nhận Chứng Nhận trên mobile */}
+                    {/* <Button
                       variant="outline"
                       size="sm"
                       onClick={() => {
@@ -240,7 +333,7 @@ export default function TransparencySection() {
                     >
                       <Medal className="w-4 h-4" />
                       Nhận Chứng Nhận
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               ))
