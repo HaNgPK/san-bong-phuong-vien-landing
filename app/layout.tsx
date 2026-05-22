@@ -1,8 +1,19 @@
 import '../src/index.css';
-import { Inter } from 'next/font/google';
+import { Inter, Playfair_Display, Cormorant_Garamond } from 'next/font/google';
 import { DonationProvider } from '../src/contexts/DonationContext';
 
 const inter = Inter({ subsets: ['latin'] });
+const playfair = Playfair_Display({
+  subsets: ['latin', 'vietnamese'],
+  variable: '--font-playfair',
+  weight: ['600', '700', '800', '900'],
+});
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin', 'vietnamese'],
+  variable: '--font-cormorant',
+  weight: ['400', '600', '700'],
+  style: ['normal', 'italic'],
+});
 
 export const metadata = {
   title: 'Sân Bóng Phương Viên - Kiến tạo tương lai',
@@ -54,7 +65,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="vi">
+    <html lang="vi" className={`${playfair.variable} ${cormorant.variable}`}>
       <body className={inter.className}>
         <DonationProvider initialCsvText={initialCsvText}>
           {children}

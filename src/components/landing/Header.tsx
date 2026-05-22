@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, MapPin } from "lucide-react";
+import { Facebook } from "lucide-react";
 
 export default function Header() {
   const scrollToTop = () => {
@@ -11,10 +11,14 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-emerald-950/90 backdrop-blur-md">
       <div className="container px-4 mx-auto flex h-16 items-center justify-between">
         {/* Left Side: Brand/Logo */}
-        <button onClick={scrollToTop} className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left">
-          {/* A generic icon for Youth Union or Community */}
-          <div className="bg-emerald-600 rounded-full p-1.5 flex items-center justify-center shadow-inner">
-            <MapPin className="w-5 h-5 text-white" />
+        <button onClick={scrollToTop} className="flex items-center gap-2.5 hover:opacity-90 transition-opacity text-left">
+          {/* Logo Đoàn Thanh Niên chính thống */}
+          <div className="bg-white rounded-full p-0.5 w-9 h-9 flex items-center justify-center shadow-[0_2px_6px_rgba(0,0,0,0.15)] shrink-0">
+            <img 
+              src="/images/doan_thanh_nien.png" 
+              alt="Logo Đoàn Thanh Niên" 
+              className="w-[88%] h-[88%] object-contain"
+            />
           </div>
           <div className="flex flex-col">
             <span className="text-white font-bold text-base md:text-lg uppercase tracking-wide leading-none">

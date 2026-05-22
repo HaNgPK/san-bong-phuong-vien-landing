@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useDonations } from "@/contexts/DonationContext";
 import { formatCurrency, getCategoryColor } from "@/lib/format";
-// import CertificateModal from "./CertificateModal";
+import CertificateModal from "./CertificateModal";
 
 function parseDateString(dateStr: string): number {
   if (!dateStr) return 0;
@@ -38,13 +38,9 @@ function parseDateString(dateStr: string): number {
 
 export default function TransparencySection() {
   const [searchQuery, setSearchQuery] = useState("");
-  // Ẩn state liên quan đến CertificateModal để tránh lỗi biến không sử dụng
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  // const [selectedDonation, setSelectedDonation] = useState<{
-  //   name: string;
-  //   amount: number;
-  // } | null>(null);
+  const [selectedDonation, setSelectedDonation] = useState<any>(null);
 
   const { donations, loading, refreshData } = useDonations();
   const [sortField, setSortField] = useState<"date" | "category" | "amount">("date");
@@ -106,8 +102,10 @@ export default function TransparencySection() {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Sao Kê Đóng Góp
             </h2>
-            <p className="text-gray-500 mb-4 md:mb-0">
-              Cập nhật tự động mọi khoản thu
+            <p className="text-gray-500 mb-4 md:mb-0 flex flex-wrap items-center gap-1.5 justify-center md:justify-start">
+              <span>Cập nhật tự động mọi khoản thu</span>
+              <span className="hidden sm:inline-block w-1.5 h-1.5 bg-emerald-300 rounded-full"></span>
+              <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded text-xs animate-pulse">🌟 Nhấp dòng sao kê để xem Vinh Danh</span>
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
@@ -146,13 +144,11 @@ export default function TransparencySection() {
           </div>
         </div>
 
-        {/* Ẩn CertificateModal theo yêu cầu */}
-        {/* <CertificateModal
+        <CertificateModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          initialName={selectedDonation?.name}
-          initialAmount={selectedDonation?.amount}
-        /> */}
+          donation={selectedDonation}
+        />
 
         <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-2xl bg-gray-50/50">
           {/* GIAO DIỆN DESKTOP (TABLE) */}
@@ -226,7 +222,11 @@ export default function TransparencySection() {
                   filteredDonations.map((donation) => (
                     <TableRow
                       key={donation.id}
-                      className="hover:bg-emerald-50/50 transition-colors"
+                      className="hover:bg-emerald-50/80 cursor-pointer active:bg-emerald-100/40 transition-all duration-150"
+                      onClick={() => {
+                        setSelectedDonation(donation);
+                        setIsModalOpen(true);
+                      }}
                     >
                       <TableCell className="text-gray-600 py-3">
                         {donation.date}
@@ -289,7 +289,11 @@ export default function TransparencySection() {
               filteredDonations.map((donation) => (
                 <div
                   key={donation.id}
-                  className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-3"
+                  onClick={() => {
+                    setSelectedDonation(donation);
+                    setIsModalOpen(true);
+                  }}
+                  className="bg-white p-4 rounded-xl border border-gray-100 hover:border-emerald-300 shadow-sm flex flex-col gap-3 cursor-pointer active:scale-[0.98] active:bg-emerald-50/10 transition-all duration-150"
                 >
                   <div className="flex justify-between items-start gap-2">
                     <div className="flex flex-col gap-1.5">
