@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === "admin" && password === "phuongvien5720@!") {
+    if (username === "admin" && password === "Huyen2609@#") {
       // Set cookie to keep logged in for 1 day
       document.cookie = "admin_auth=true; path=/; max-age=86400";
       router.push("/admin");
