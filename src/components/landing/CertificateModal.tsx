@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Calendar, Hash, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/format";
 
 interface CertificateModalProps {
   isOpen: boolean;
@@ -40,17 +39,17 @@ export default function CertificateModal({
     const cat = category.toLowerCase();
     if (cat.includes("doanh nghiệp") || cat.includes("công ty")) {
       return {
-        className: "bg-gradient-to-r from-[#881337] via-[#b91c1c] to-[#881337] text-yellow-100 border-[#c5a85c] shadow-sm",
+        className: "bg-gradient-to-r from-[#881337] via-[#b91c1c] to-[#881337] text-yellow-100 border-[#D4AF37] shadow-sm",
         label: "Nhà Tài Trợ Doanh Nghiệp"
       };
     } else if (cat.includes("đội bóng") || cat.includes("tập thể") || cat.includes("clb") || cat.includes("team") || cat.includes("câu lạc bộ")) {
       return {
-        className: "bg-gradient-to-r from-[#b3882f] via-[#fff5cc] to-[#b3882f] text-[#032b1a] border-[#c5a85c] shadow-sm",
+        className: "bg-gradient-to-r from-[#b3882f] via-[#fff5cc] to-[#b3882f] text-[#0B3C26] border-[#D4AF37] shadow-sm",
         label: "Nhà Tài Trợ Đội Bóng"
       };
     } else {
       return {
-        className: "bg-gradient-to-r from-[#047857] via-[#10b981] to-[#047857] text-white border-[#c5a85c] shadow-sm",
+        className: "bg-gradient-to-r from-[#047857] via-[#10b981] to-[#047857] text-white border-[#D4AF37] shadow-sm",
         label: "Nhà Tài Trợ Cá Nhân"
       };
     }
@@ -83,27 +82,34 @@ export default function CertificateModal({
           font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
         }
         .parchment-bg {
-          background-color: #faf7ed;
+          background-color: #FDFBF7;
           background-image: 
-            radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(250, 246, 232, 0.97) 55%, rgba(236, 230, 204, 0.99) 100%),
-            linear-gradient(to right, rgba(197, 168, 92, 0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(197, 168, 92, 0.04) 1px, transparent 1px),
-            repeating-linear-gradient(45deg, rgba(197, 168, 92, 0.015) 0px, rgba(197, 168, 92, 0.015) 1px, transparent 1px, transparent 10px);
+            radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(253, 251, 247, 0.97) 55%, rgba(246, 241, 227, 0.99) 100%),
+            linear-gradient(to right, rgba(212, 175, 55, 0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(212, 175, 55, 0.04) 1px, transparent 1px),
+            repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.015) 0px, rgba(212, 175, 55, 0.015) 1px, transparent 1px, transparent 10px);
           background-size: auto, 24px 24px, 24px 24px, auto;
         }
         .royal-emerald-frame {
-          border: 6px solid #032b1a;
+          border: 6px solid #0B3C26;
           box-shadow: 
             0 15px 45px rgba(0, 0, 0, 0.45),
-            inset 0 0 35px rgba(197, 168, 92, 0.35);
+            inset 0 0 35px rgba(212, 175, 55, 0.35);
         }
         .inner-gold-frame {
-          border: 3px double #c5a85c;
+          border: 3px double #D4AF37;
         }
         .signature-sharp {
           image-rendering: -webkit-optimize-contrast;
           image-rendering: crisp-edges;
           filter: drop-shadow(0.5px 0.5px 0px rgba(0, 50, 150, 0.25)) contrast(1.4) saturate(1.3) brightness(0.94);
+        }
+        .gold-text-metallic {
+          background: linear-gradient(135deg, #a67c1e 0%, #f1d382 25%, #b8860b 50%, #f6e3a7 75%, #a67c1e 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: #D4AF37;
+          filter: drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.6));
         }
       `}</style>
 
@@ -123,14 +129,14 @@ export default function CertificateModal({
         }`}
       >
         
-        {/* THẺ VINH DANH HOÀNG GIA IVORY - Tối ưu tỷ lệ 9:14 và giới hạn chiều cao max-h-[76vh] để luôn nằm gọn trong màn hình laptop */}
+        {/* THẺ VINH DANH HOÀNG GIA IVORY - Thiết kế tỷ lệ 9:16 chuẩn chỉnh, tối ưu hiển thị di động không bị co nhỏ */}
         <div 
           ref={cardRef}
-          className="relative overflow-hidden w-full max-h-[76vh] min-h-[520px] rounded-[24px] parchment-bg royal-emerald-frame flex flex-col justify-between p-4 sm:p-6 text-center text-slate-800 select-none shadow-2xl"
-          style={{ aspectRatio: "9/14" }}
+          className="relative overflow-hidden w-full max-h-[82vh] min-h-[530px] sm:min-h-[580px] rounded-[28px] parchment-bg royal-emerald-frame flex flex-col justify-between p-5 sm:p-7 text-center text-slate-800 select-none shadow-2xl"
+          style={{ aspectRatio: "9/16" }}
         >
           {/* Logo CLB Bóng đá Phương Viên ở góc trên bên trái - Căn chỉnh khớp viền vàng */}
-          <div className="absolute top-3 left-3 w-11 h-11 sm:top-4.5 sm:left-4.5 sm:w-14 sm:h-14 rounded-full bg-white border-[2px] border-[#c5a85c] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
+          <div className="absolute top-3 left-3 w-11 h-11 sm:top-4.5 sm:left-4.5 sm:w-14 sm:h-14 rounded-full bg-white border-[2px] border-[#D4AF37] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
             <img 
               src="/images/phuong_vien_fc.png" 
               alt="Logo CLB Phương Viên" 
@@ -139,20 +145,20 @@ export default function CertificateModal({
           </div>
 
           {/* Logo Đoàn Thanh Niên ở góc trên bên phải - Căn chỉnh khớp viền vàng */}
-          <div className="absolute top-3 right-3 w-11 h-11 sm:top-4.5 sm:right-4.5 sm:w-14 sm:h-14 rounded-full bg-white border-[2px] border-[#c5a85c] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
+          <div className="absolute top-3 right-3 w-11 h-11 sm:top-4.5 sm:right-4.5 sm:w-14 sm:h-14 rounded-full bg-white border-[2px] border-[#D4AF37] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
             <img 
               src="/images/doan_thanh_nien.png" 
               alt="Logo Đoàn Thanh Niên" 
               className="w-full h-full object-contain"
             />
           </div>
-          <svg className="absolute bottom-3 left-3 w-8 h-8 sm:bottom-4 sm:left-4 sm:w-10 sm:h-10 text-[#c5a85c]/95 scale-y-[-1]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
+          <svg className="absolute bottom-3 left-3 w-8 h-8 sm:bottom-4 sm:left-4 sm:w-10 sm:h-10 text-[#D4AF37]/95 scale-y-[-1]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="M 10 50 L 10 10 L 50 10 M 10 10 L 35 35 M 10 25 L 25 10 M 15 15 C 20 20, 20 25, 25 25 C 25 20, 20 20, 15 15 Z M 10 40 C 13 40, 15 37, 15 35 M 40 10 C 40 13, 37 15, 35 15" />
             <circle cx="10" cy="10" r="3.5" fill="currentColor" />
             <circle cx="50" cy="10" r="2.5" fill="currentColor" />
             <circle cx="10" cy="50" r="2.5" fill="currentColor" />
           </svg>
-          <svg className="absolute bottom-3 right-3 w-8 h-8 sm:bottom-4 sm:right-4 sm:w-10 sm:h-10 text-[#c5a85c]/95 scale-x-[-1] scale-y-[-1]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
+          <svg className="absolute bottom-3 right-3 w-8 h-8 sm:bottom-4 sm:right-4 sm:w-10 sm:h-10 text-[#D4AF37]/95 scale-x-[-1] scale-y-[-1]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="M 10 50 L 10 10 L 50 10 M 10 10 L 35 35 M 10 25 L 25 10 M 15 15 C 20 20, 20 25, 25 25 C 25 20, 20 20, 15 15 Z M 10 40 C 13 40, 15 37, 15 35 M 40 10 C 40 13, 37 15, 35 15" />
             <circle cx="10" cy="10" r="3.5" fill="currentColor" />
             <circle cx="50" cy="10" r="2.5" fill="currentColor" />
@@ -162,11 +168,11 @@ export default function CertificateModal({
           {/* Đường viền chỉ vàng kép hoàng gia chạy phía trong */}
           <div className="absolute inset-[8px] inner-gold-frame rounded-[18px] pointer-events-none"></div>
           {/* Đường chỉ xanh ngọc lục bảo sắc nét sát sườn */}
-          <div className="absolute inset-3 border-2 border-[#032b1a]/15 rounded-[15px] pointer-events-none"></div>
+          <div className="absolute inset-3 border-2 border-[#0B3C26]/15 rounded-[15px] pointer-events-none"></div>
 
           {/* BACKGROUND SÂN BÓNG BLUEPRINT CHI TIẾT KỸ THUẬT */}
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-0 p-8 sm:p-10">
-            <svg className="w-full h-full text-[#c5a85c]" viewBox="0 0 100 150" fill="none" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.14">
+            <svg className="w-full h-full text-[#D4AF37]" viewBox="0 0 100 150" fill="none" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.14">
               {/* Biên ngoài */}
               <rect x="5" y="5" width="90" height="140" rx="2" />
               {/* Vạch giữa sân và vạch sút phạt */}
@@ -198,7 +204,7 @@ export default function CertificateModal({
             <div className="relative mb-1 sm:mb-2 flex items-center justify-center">
               {/* Cành nguyệt quế vàng và ngôi sao trung tâm sang trọng */}
               <div className="relative z-10 flex items-center justify-center">
-                <svg className="w-14 h-10 sm:w-[68px] sm:h-[54px] text-[#c5a85c]" viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="w-14 h-10 sm:w-[68px] sm:h-[54px] text-[#D4AF37]" viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   {/* Cành nguyệt quế trái */}
                   <path d="M 35 48 C 22 45, 12 35, 15 20 C 16 15, 20 10, 25 8" strokeWidth="2.5" />
                   {/* Lá nguyệt quế trái */}
@@ -227,42 +233,42 @@ export default function CertificateModal({
               </div>
             </div>
             
-            <h4 className="text-[12px] sm:text-[14px] font-black tracking-[0.3em] text-[#9c7a2b] uppercase mb-0.5 sm:mb-1 font-sans">
+            <h4 className="text-[12px] sm:text-[14px] font-black tracking-[0.3em] text-[#D4AF37] uppercase mb-0.5 sm:mb-1 font-sans">
               Bảng Vàng Danh Dự
             </h4>
-            <h2 className="text-xl sm:text-[26px] font-black tracking-wide uppercase font-sans text-[#032b1a] leading-tight drop-shadow-[0_0.5px_1px_rgba(255,255,255,0.9)]">
+            <h2 className="text-xl sm:text-[26px] font-black tracking-wide uppercase font-sans gold-text-metallic leading-tight">
               Tri Ân Tấm Lòng Vàng
             </h2>
             
             {/* Họa tiết phân cách vàng nhã nhặn kèm ngôi sao vàng chính giúp */}
             <div className="flex items-center gap-2 mt-1 sm:mt-1.5 w-32 justify-center">
-              <div className="h-[1.5px] bg-gradient-to-r from-transparent to-[#c5a85c] flex-1"></div>
-              <svg className="w-3.5 h-3.5 text-[#c5a85c]" viewBox="0 0 24 24" fill="currentColor">
+              <div className="h-[1.5px] bg-gradient-to-r from-transparent to-[#D4AF37] flex-1"></div>
+              <svg className="w-3.5 h-3.5 text-[#D4AF37]" viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
               </svg>
-              <div className="h-[1.5px] bg-gradient-to-l from-transparent to-[#c5a85c] flex-1"></div>
+              <div className="h-[1.5px] bg-gradient-to-l from-transparent to-[#D4AF37] flex-1"></div>
             </div>
           </div>
 
           {/* 2. MIDDLE CONTENT SECTION - Cân đối, khoảng cách cực kỳ hài hòa */}
           <div className="relative z-10 flex flex-col justify-center my-auto px-1 gap-1.5 sm:gap-2.5">
-            <p className="text-[#3b5446] text-[11px] sm:text-[13px] font-bold italic tracking-wide">
+            <p className="text-[#0B3C26]/80 text-[11px] sm:text-[13px] font-bold italic tracking-wide">
               Ban Quản lý Sân bóng Phương Viên trân trọng vinh danh và tri ân:
             </p>
             
             {/* TÊN NGƯỜI ĐÓNG GÓP - Tải bằng Font Serif Playfair Display cực kỳ rõ nét, uy nghiêm */}
             <div className="px-1 py-0.5">
-              <h1 className="text-xl sm:text-2xl md:text-[28px] font-black tracking-wide text-[#991b1b] uppercase font-cinzel leading-none drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
+              <h1 className="text-xl sm:text-2xl md:text-[28px] font-black tracking-wide text-[#960018] uppercase font-cinzel leading-none drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] break-words max-w-[90%] mx-auto">
                 {displayName}
               </h1>
               
               {/* Dải chỉ họa tiết hoa văn dưới tên nhà tài trợ */}
-              <div className="flex items-center justify-center gap-1.5 mt-2 text-[#c5a85c]/85">
-                <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-[#c5a85c]"></span>
+              <div className="flex items-center justify-center gap-1.5 mt-2 text-[#D4AF37]/85">
+                <span className="w-8 h-[1px] bg-gradient-to-r from-transparent to-[#D4AF37]"></span>
                 <span className="text-[8px]">✦</span>
                 <span className="text-[12px]">★</span>
                 <span className="text-[8px]">✦</span>
-                <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-[#c5a85c]"></span>
+                <span className="w-8 h-[1px] bg-gradient-to-l from-transparent to-[#D4AF37]"></span>
               </div>
             </div>
 
@@ -274,40 +280,40 @@ export default function CertificateModal({
             </div>
 
             {/* KHỐI SỐ TIỀN ỦNG HỘ - Thiết kế lớn hơn, font không chân rõ ràng và uy nghiêm */}
-            <div className="relative px-3 py-2 sm:px-5 sm:py-3.5 rounded-xl bg-gradient-to-b from-[#c5a85c]/14 to-[#c5a85c]/6 border-2 border-double border-[#c5a85c] shadow-[0_5px_18px_rgba(197,168,92,0.14),inset_0_1px_1px_rgba(255,255,255,0.8)] max-w-[320px] mx-auto w-full flex flex-col items-center justify-center">
-              <span className="text-[9.5px] sm:text-[11px] font-extrabold text-[#8c6d26] tracking-widest uppercase mb-0.5 sm:mb-1">
+            <div className="relative px-3 py-2 sm:px-5 sm:py-3.5 rounded-xl bg-gradient-to-b from-[#D4AF37]/14 to-[#D4AF37]/6 border-2 border-double border-[#D4AF37] shadow-[0_5px_18px_rgba(212,175,55,0.14),inset_0_1px_1px_rgba(255,255,255,0.8)] max-w-[320px] mx-auto w-full flex flex-col items-center justify-center">
+              <span className="text-[9.5px] sm:text-[11px] font-extrabold text-[#b8860b] tracking-widest uppercase mb-0.5 sm:mb-1">
                 Số Tiền Ủng Hộ
               </span>
-              <h3 className="text-2xl sm:text-[30px] font-black tracking-wide font-sans text-[#15803d] leading-none drop-shadow-[0_1.5px_2px_rgba(255,255,255,0.95)]">
-                +{formatCurrency(displayAmount)}
+              <h3 className="text-2xl sm:text-[30px] font-black tracking-wide font-sans text-[#0B3C26] leading-none drop-shadow-[0_1.5px_2px_rgba(255,255,255,0.95)]">
+                +{displayAmount.toLocaleString('vi-VN')} VND
               </h3>
             </div>
 
             {/* HỘP LỜI TRI ÂN CỦA BÀ CON LÀNG PHƯƠNG VIÊN */}
-            <div className="relative px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl bg-[#faf6ed]/70 border border-[#c5a85c]/35 max-w-[320px] mx-auto w-full min-h-[46px] sm:min-h-[56px] flex flex-col justify-center shadow-[inset_0_1.5px_4px_rgba(0,0,0,0.03)] backdrop-blur-xs">
-              <Quote className="absolute -top-2 -left-1 w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] text-[#c5a85c]/45 rotate-180" />
+            <div className="relative px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl bg-[#FDFBF7]/70 border border-[#D4AF37]/35 max-w-[320px] mx-auto w-full min-h-[46px] sm:min-h-[56px] flex flex-col justify-center shadow-[inset_0_1.5px_4px_rgba(0,0,0,0.03)] backdrop-blur-xs">
+              <Quote className="absolute -top-2 -left-1 w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] text-[#D4AF37]/45 rotate-180" />
               <p className="text-[11.5px] sm:text-[13.5px] text-[#2c3e35] leading-relaxed font-semibold italic font-cormorant px-1">
                 {displayMessage ? `"${displayMessage}"` : `"Bà con nhân dân làng Phương Viên xin gửi lời cảm ơn chân thành và sâu sắc nhất đến Quý Mạnh Thường Quân đã chung sức đồng lòng, tài trợ kinh phí xây dựng Sân cỏ nhân tạo quê hương!"`}
               </p>
-              <Quote className="absolute -bottom-2 -right-1 w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] text-[#c5a85c]/45" />
+              <Quote className="absolute -bottom-2 -right-1 w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] text-[#D4AF37]/45" />
             </div>
           </div>
 
           {/* 3. FOOTER SECTION - Bố cục đối xứng hai bên cực kỳ gọn gàng và thoáng đãng */}
-          <div className="relative z-10 border-t border-[#c5a85c]/35 pt-2 sm:pt-3.5 flex items-end justify-between px-0.5">
+          <div className="relative z-10 border-t border-[#D4AF37]/35 pt-2 sm:pt-3.5 flex items-end justify-between px-0.5">
             {/* Thông tin mã vinh danh */}
             <div className="text-left flex flex-col gap-0.5 shrink-0 pb-1">
-              <p className="text-[10.5px] font-black text-[#032b1a] tracking-widest uppercase font-cinzel">
+              <p className="text-[10.5px] font-black text-[#0B3C26] tracking-widest uppercase font-cinzel">
                 BQL SÂN BÓNG
               </p>
               
               <div className="flex items-center gap-1 text-[8px] text-[#5c7063] font-semibold">
-                <Hash className="w-2 h-2 text-[#c5a85c]" />
+                <Hash className="w-2 h-2 text-[#D4AF37]" />
                 <span>Mã số: PV-{displayId}</span>
               </div>
               
               <div className="flex items-center gap-1 text-[8px] text-[#5c7063] font-semibold">
-                <Calendar className="w-2 h-2 text-[#c5a85c]" />
+                <Calendar className="w-2 h-2 text-[#D4AF37]" />
                 <span>Ngày: {displayDate}</span>
               </div>
             </div>
@@ -327,13 +333,13 @@ export default function CertificateModal({
                 />
                 
                 {/* Dấu đỏ CLB đặt ở z-0 dưới chữ ký z-10 để chữ ký đè lên dấu cực kỳ chân thực, dịch trái để không đè chữ */}
-                <div className="absolute -left-7 top-[-6px] sm:-left-9 sm:top-[-4px] scale-80 sm:scale-100 border-2 border-[#b91c1c]/80 text-[#b91c1c]/80 px-1.5 py-0.5 text-[8.5px] font-black uppercase tracking-wider -rotate-12 rounded-[1.5px] select-none pointer-events-none bg-[#faf6ed]/30 backdrop-blur-[0.2px] z-0 opacity-85">
+                <div className="absolute -left-7 top-[-6px] sm:-left-9 sm:top-[-4px] scale-80 sm:scale-100 border-2 border-[#b91c1c]/80 text-[#b91c1c]/80 px-1.5 py-0.5 text-[8.5px] font-black uppercase tracking-wider -rotate-12 rounded-[1.5px] select-none pointer-events-none bg-[#FDFBF7]/30 backdrop-blur-[0.2px] z-0 opacity-85">
                   <div className="text-[6.5px] leading-tight text-center font-bold">CLB BÓNG ĐÁ</div>
                   <div className="text-[8.5px] leading-none text-center font-extrabold tracking-widest mt-0.5">PHƯƠNG VIÊN</div>
                 </div>
               </div>
               
-              <p className="text-[9.5px] font-black text-[#032b1a] uppercase font-sans tracking-wide mt-0.5 leading-none">
+              <p className="text-[9.5px] font-black text-[#0B3C26] uppercase font-sans tracking-wide mt-0.5 leading-none">
                 Nguyễn Phạm Khắc Hà
               </p>
               <p className="text-[5.5px] sm:text-[6.5px] font-bold text-[#5c7063] uppercase tracking-wider mt-0.5 text-center leading-normal max-w-[150px]">
@@ -349,7 +355,7 @@ export default function CertificateModal({
         <div className="mt-4 flex flex-col items-center gap-3 w-full">
           <Button 
             onClick={onClose}
-            className="w-full bg-[#032b1a] hover:bg-[#021f13] text-[#faf6ed] border border-[#c5a85c]/45 py-5 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 font-cinzel text-xs tracking-wider shadow-md"
+            className="w-full bg-[#0B3C26] hover:bg-[#072517] text-[#faf6ed] border border-[#D4AF37]/45 py-5 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 font-cinzel text-xs tracking-wider shadow-md"
           >
             Quay lại Danh sách Sao kê
           </Button>
