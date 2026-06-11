@@ -72,7 +72,7 @@ export default function CertificateModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center overflow-y-auto p-3 sm:p-6 bg-black/85 backdrop-blur-md transition-all duration-300">
+    <div className="fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4 sm:p-6 bg-black/85 backdrop-blur-md transition-all duration-300">
       
       {/* Tối ưu hóa CSS để tạo hiệu ứng giấy da Canvas kết hợp lưới kỹ thuật chìm và khung viền hoàng gia nổi khối */}
       <style>{`
@@ -116,18 +116,18 @@ export default function CertificateModal({
         <X className="w-6 h-6" />
       </button>
 
-      {/* Main Container - Tối ưu max-w-[450px] và sử dụng grid place-items-center của cha để căn giữa hoàn hảo */}
+      {/* Main Container - Tối ưu max-w-[420px] và sử dụng grid place-items-center của cha để căn giữa hoàn hảo */}
       <div 
-        className={`flex flex-col items-center justify-center max-w-[450px] w-full transition-all duration-500 ease-out transform ${
+        className={`flex flex-col items-center justify-center max-w-[420px] w-full transition-all duration-500 ease-out transform ${
           animate ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-8"
         }`}
       >
         
-        {/* THẺ VINH DANH HOÀNG GIA IVORY - Tối ưu tỷ lệ 9:15.2 và giới hạn chiều cao max-h-[84dvh] để luôn nằm gọn và cao hơn trên màn hình di động */}
+        {/* THẺ VINH DANH HOÀNG GIA IVORY - Tối ưu tỷ lệ 9:14 và giới hạn chiều cao max-h-[76vh] để luôn nằm gọn trong màn hình laptop */}
         <div 
           ref={cardRef}
-          className="relative overflow-hidden w-full max-h-[84dvh] min-h-[560px] sm:min-h-[600px] rounded-[28px] parchment-bg royal-emerald-frame flex flex-col justify-between p-5 sm:p-7 text-center text-slate-800 select-none shadow-2xl"
-          style={{ aspectRatio: "9/15.2" }}
+          className="relative overflow-hidden w-full max-h-[76vh] min-h-[520px] rounded-[24px] parchment-bg royal-emerald-frame flex flex-col justify-between p-4 sm:p-6 text-center text-slate-800 select-none shadow-2xl"
+          style={{ aspectRatio: "9/14" }}
         >
           {/* Logo CLB Bóng đá Phương Viên ở góc trên bên trái - Căn chỉnh khớp viền vàng */}
           <div className="absolute top-3 left-3 w-9 h-9 sm:top-4.5 sm:left-4.5 sm:w-11 sm:h-11 rounded-full bg-white border-[2px] border-[#c5a85c] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
