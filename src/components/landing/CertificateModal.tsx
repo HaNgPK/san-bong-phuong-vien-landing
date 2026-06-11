@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { X, Calendar, Hash, Quote, Camera } from "lucide-react";
+import { X, Calendar, Hash, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/format";
 
@@ -347,11 +347,6 @@ export default function CertificateModal({
 
         {/* Hướng dẫn thao tác và nút đóng chính (Nằm ngoài thẻ vinh danh để ảnh chụp được sạch đẹp) */}
         <div className="mt-4 flex flex-col items-center gap-3 w-full">
-          <div className="flex items-center gap-2 text-white/90 bg-white/5 border border-white/10 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-center shadow-lg backdrop-blur-md">
-            <Camera className="w-[18px] h-[18px] text-[#ffeb3b] animate-bounce shrink-0" />
-            <span>Mẹo: Hãy chụp màn hình (Screenshot) để lưu bằng vinh danh tuyệt đẹp này!</span>
-          </div>
-
           <Button 
             onClick={onClose}
             className="w-full bg-[#032b1a] hover:bg-[#021f13] text-[#faf6ed] border border-[#c5a85c]/45 py-5 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 font-cinzel text-xs tracking-wider shadow-md"
@@ -360,22 +355,6 @@ export default function CertificateModal({
           </Button>
         </div>
 
-      </div>
-    </div>
-  );-sm font-medium text-center shadow-lg backdrop-blur-md">
-              <Camera className="w-[18px] h-[18px] text-[#ffeb3b] animate-bounce shrink-0" />
-              <span>Mẹo: Hãy chụp màn hình (Screenshot) để lưu bằng vinh danh tuyệt đẹp này!</span>
-            </div>
-
-            <Button 
-              onClick={onClose}
-              className="w-full bg-[#032b1a] hover:bg-[#021f13] text-[#faf6ed] border border-[#c5a85c]/45 py-5 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 font-cinzel text-xs tracking-wider shadow-md"
-            >
-              Quay lại Danh sách Sao kê
-            </Button>
-          </div>
-
-        </div>
       </div>
     </div>
   );
