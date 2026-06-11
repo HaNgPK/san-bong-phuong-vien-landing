@@ -130,7 +130,7 @@ export default function CertificateModal({
           style={{ aspectRatio: "9/14" }}
         >
           {/* Logo CLB Bóng đá Phương Viên ở góc trên bên trái - Căn chỉnh khớp viền vàng */}
-          <div className="absolute top-3 left-3 w-9 h-9 sm:top-4.5 sm:left-4.5 sm:w-11 sm:h-11 rounded-full bg-white border-[2px] border-[#c5a85c] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
+          <div className="absolute top-3 left-3 w-11 h-11 sm:top-4.5 sm:left-4.5 sm:w-14 sm:h-14 rounded-full bg-white border-[2px] border-[#c5a85c] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
             <img 
               src="/images/phuong_vien_fc.png" 
               alt="Logo CLB Phương Viên" 
@@ -139,7 +139,7 @@ export default function CertificateModal({
           </div>
 
           {/* Logo Đoàn Thanh Niên ở góc trên bên phải - Căn chỉnh khớp viền vàng */}
-          <div className="absolute top-3 right-3 w-9 h-9 sm:top-4.5 sm:right-4.5 sm:w-11 sm:h-11 rounded-full bg-white border-[2px] border-[#c5a85c] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
+          <div className="absolute top-3 right-3 w-11 h-11 sm:top-4.5 sm:right-4.5 sm:w-14 sm:h-14 rounded-full bg-white border-[2px] border-[#c5a85c] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
             <img 
               src="/images/doan_thanh_nien.png" 
               alt="Logo Đoàn Thanh Niên" 
@@ -227,10 +227,10 @@ export default function CertificateModal({
               </div>
             </div>
             
-            <h4 className="text-[9.5px] sm:text-[11.5px] font-black tracking-[0.3em] text-[#9c7a2b] uppercase mb-0.5 font-sans">
+            <h4 className="text-[12px] sm:text-[14px] font-black tracking-[0.3em] text-[#9c7a2b] uppercase mb-0.5 sm:mb-1 font-sans">
               Bảng Vàng Danh Dự
             </h4>
-            <h2 className="text-lg sm:text-[22px] font-black tracking-wide uppercase font-sans text-[#032b1a] leading-tight drop-shadow-[0_0.5px_1px_rgba(255,255,255,0.9)]">
+            <h2 className="text-xl sm:text-[26px] font-black tracking-wide uppercase font-sans text-[#032b1a] leading-tight drop-shadow-[0_0.5px_1px_rgba(255,255,255,0.9)]">
               Tri Ân Tấm Lòng Vàng
             </h2>
             
@@ -246,13 +246,13 @@ export default function CertificateModal({
 
           {/* 2. MIDDLE CONTENT SECTION - Cân đối, khoảng cách cực kỳ hài hòa */}
           <div className="relative z-10 flex flex-col justify-center my-auto px-1 gap-1.5 sm:gap-2.5">
-            <p className="text-[#3b5446] text-[10px] sm:text-[12px] font-bold italic tracking-wide">
+            <p className="text-[#3b5446] text-[11px] sm:text-[13px] font-bold italic tracking-wide">
               Ban Quản lý Sân bóng Phương Viên trân trọng vinh danh và tri ân:
             </p>
             
             {/* TÊN NGƯỜI ĐÓNG GÓP - Tải bằng Font Serif Playfair Display cực kỳ rõ nét, uy nghiêm */}
             <div className="px-1 py-0.5">
-              <h1 className="text-lg sm:text-xl md:text-[25px] font-black tracking-wide text-[#991b1b] uppercase font-cinzel leading-none drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
+              <h1 className="text-xl sm:text-2xl md:text-[28px] font-black tracking-wide text-[#991b1b] uppercase font-cinzel leading-none drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
                 {displayName}
               </h1>
               
@@ -268,17 +268,17 @@ export default function CertificateModal({
 
             {/* NHÃN PHÂN LOẠI BADGE */}
             <div className="flex justify-center">
-              <span className={`px-3 py-0.5 sm:px-4 sm:py-1 text-[8.5px] sm:text-[9.5px] font-black rounded-full tracking-widest uppercase border ${badgeStyles.className}`}>
+              <span className={`px-3.5 py-0.5 sm:px-4.5 sm:py-1 text-[10px] sm:text-[11px] font-black rounded-full tracking-widest uppercase border ${badgeStyles.className}`}>
                 {badgeStyles.label}
               </span>
             </div>
 
             {/* KHỐI SỐ TIỀN ỦNG HỘ - Thiết kế lớn hơn, font không chân rõ ràng và uy nghiêm */}
             <div className="relative px-3 py-2 sm:px-5 sm:py-3.5 rounded-xl bg-gradient-to-b from-[#c5a85c]/14 to-[#c5a85c]/6 border-2 border-double border-[#c5a85c] shadow-[0_5px_18px_rgba(197,168,92,0.14),inset_0_1px_1px_rgba(255,255,255,0.8)] max-w-[320px] mx-auto w-full flex flex-col items-center justify-center">
-              <span className="text-[8.5px] sm:text-[9.5px] font-extrabold text-[#8c6d26] tracking-widest uppercase mb-0.5 sm:mb-1">
+              <span className="text-[9.5px] sm:text-[11px] font-extrabold text-[#8c6d26] tracking-widest uppercase mb-0.5 sm:mb-1">
                 Số Tiền Ủng Hộ
               </span>
-              <h3 className="text-xl sm:text-[26px] font-black tracking-wide font-sans text-[#15803d] leading-none drop-shadow-[0_1.5px_2px_rgba(255,255,255,0.95)]">
+              <h3 className="text-2xl sm:text-[30px] font-black tracking-wide font-sans text-[#15803d] leading-none drop-shadow-[0_1.5px_2px_rgba(255,255,255,0.95)]">
                 +{formatCurrency(displayAmount)}
               </h3>
             </div>
@@ -286,7 +286,7 @@ export default function CertificateModal({
             {/* HỘP LỜI TRI ÂN CỦA BÀ CON LÀNG PHƯƠNG VIÊN */}
             <div className="relative px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl bg-[#faf6ed]/70 border border-[#c5a85c]/35 max-w-[320px] mx-auto w-full min-h-[46px] sm:min-h-[56px] flex flex-col justify-center shadow-[inset_0_1.5px_4px_rgba(0,0,0,0.03)] backdrop-blur-xs">
               <Quote className="absolute -top-2 -left-1 w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] text-[#c5a85c]/45 rotate-180" />
-              <p className="text-[10px] sm:text-[12px] text-[#2c3e35] leading-relaxed font-semibold italic font-cormorant px-1">
+              <p className="text-[11.5px] sm:text-[13.5px] text-[#2c3e35] leading-relaxed font-semibold italic font-cormorant px-1">
                 {displayMessage ? `"${displayMessage}"` : `"Bà con nhân dân làng Phương Viên xin gửi lời cảm ơn chân thành và sâu sắc nhất đến Quý Mạnh Thường Quân đã chung sức đồng lòng, tài trợ kinh phí xây dựng Sân cỏ nhân tạo quê hương!"`}
               </p>
               <Quote className="absolute -bottom-2 -right-1 w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] text-[#c5a85c]/45" />
@@ -297,7 +297,7 @@ export default function CertificateModal({
           <div className="relative z-10 border-t border-[#c5a85c]/35 pt-2 sm:pt-3.5 flex items-end justify-between px-0.5">
             {/* Thông tin mã vinh danh */}
             <div className="text-left flex flex-col gap-0.5 shrink-0 pb-1">
-              <p className="text-[9.5px] font-black text-[#032b1a] tracking-widest uppercase font-cinzel">
+              <p className="text-[10.5px] font-black text-[#032b1a] tracking-widest uppercase font-cinzel">
                 BQL SÂN BÓNG
               </p>
               
@@ -333,7 +333,7 @@ export default function CertificateModal({
                 </div>
               </div>
               
-              <p className="text-[8.5px] font-black text-[#032b1a] uppercase font-sans tracking-wide mt-0.5 leading-none">
+              <p className="text-[9.5px] font-black text-[#032b1a] uppercase font-sans tracking-wide mt-0.5 leading-none">
                 Nguyễn Phạm Khắc Hà
               </p>
               <p className="text-[5.5px] sm:text-[6.5px] font-bold text-[#5c7063] uppercase tracking-wider mt-0.5 text-center leading-normal max-w-[150px]">
