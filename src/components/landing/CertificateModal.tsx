@@ -135,20 +135,20 @@ export default function CertificateModal({
           className="relative overflow-hidden w-full max-h-[82vh] min-h-[530px] sm:min-h-[580px] rounded-[28px] parchment-bg royal-emerald-frame flex flex-col justify-between p-5 sm:p-7 text-center text-slate-800 select-none shadow-2xl"
           style={{ aspectRatio: "9/16" }}
         >
-          {/* Logo CLB Bóng đá Phương Viên ở góc trên bên trái - Căn chỉnh khớp viền vàng */}
+          {/* Logo Đoàn Thanh Niên ở góc trên bên trái - Căn chỉnh khớp viền vàng */}
           <div className="absolute top-3 left-3 w-14 h-14 sm:top-4.5 sm:left-4.5 sm:w-16 sm:h-16 rounded-full bg-white border-[2px] border-[#D4AF37] shadow-[0_4px_10px_rgba(0,0,0,0.14)] p-0.5 z-20 flex items-center justify-center">
             <img 
-              src="/images/phuong_vien_fc.png" 
-              alt="Logo CLB Phương Viên" 
+              src="/images/doan_thanh_nien.png" 
+              alt="Logo Đoàn Thanh Niên" 
               className="w-full h-full object-contain"
             />
           </div>
 
-          {/* Logo Đoàn Thanh Niên ở góc trên bên phải - Căn chỉnh khớp viền vàng */}
+          {/* Logo CLB Bóng đá Phương Viên ở góc trên bên phải - Căn chỉnh khớp viền vàng */}
           <div className="absolute top-3 right-3 w-14 h-14 sm:top-4.5 sm:right-4.5 sm:w-16 sm:h-16 rounded-full bg-white border-[2px] border-[#D4AF37] shadow-[0_4px_10px_rgba(0,0,0,0.14)] p-0.5 z-20 flex items-center justify-center">
             <img 
-              src="/images/doan_thanh_nien.png" 
-              alt="Logo Đoàn Thanh Niên" 
+              src="/images/phuong_vien_fc.png" 
+              alt="Logo CLB Phương Viên" 
               className="w-full h-full object-contain"
             />
           </div>
@@ -253,7 +253,7 @@ export default function CertificateModal({
           {/* 2. MIDDLE CONTENT SECTION - Cân đối, khoảng cách cực kỳ hài hòa */}
           <div className="relative z-10 flex flex-col justify-center my-auto px-1 gap-1.5 sm:gap-2.5">
             <p className="text-[#0B3C26]/80 text-[11px] sm:text-[13px] font-bold italic tracking-wide">
-              Ban Quản lý Sân bóng Phương Viên trân trọng vinh danh và tri ân:
+              BQL Sân bóng Phương Viên trân trọng vinh danh và tri ân:
             </p>
             
             {/* TÊN NGƯỜI ĐÓNG GÓP - Tải bằng Font Serif Playfair Display cực kỳ rõ nét, uy nghiêm */}
