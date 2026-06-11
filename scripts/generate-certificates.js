@@ -96,7 +96,7 @@ async function run() {
   console.log("Đang tải dữ liệu từ Google Sheets...");
   let donations = [];
   try {
-    const response = await fetch(SHEET_CSV_URL + '?t=' + Date.now());
+    const response = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
     if (!response.ok) throw new Error("Lỗi kết nối HTTP: " + response.statusText);
     const csvText = await response.text();
     donations = parseCSV(csvText);
@@ -143,8 +143,15 @@ async function run() {
     fs.mkdirSync(exportBaseDir);
   }
 
-  const dateSubFolder = cleanFilename(targetDateInput.toLowerCase() === 'all' ? 'tat_ca' : targetDateInput.replace(/\//g, '-'));
-  const exportDir = path.join(exportBaseDir, `chứng_nhận_${dateSubFolder}`);
+  let dateSubFolder;
+  if (targetDateInput.toLowerCase() === 'all') {
+    const today = new Date();
+    const formattedToday = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
+    dateSubFolder = `đến_ngày_${formattedToday}`;
+  } else {
+    dateSubFolder = targetDateInput.replace(/\//g, '-');
+  }
+  const exportDir = path.join(exportBaseDir, `chứng_nhận_${cleanFilename(dateSubFolder)}`);
   if (!fs.existsSync(exportDir)) {
     fs.mkdirSync(exportDir);
   }
