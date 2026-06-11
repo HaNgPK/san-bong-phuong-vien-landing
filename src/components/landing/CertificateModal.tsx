@@ -136,7 +136,7 @@ export default function CertificateModal({
           style={{ aspectRatio: "9/16" }}
         >
           {/* Logo CLB Bóng đá Phương Viên ở góc trên bên trái - Căn chỉnh khớp viền vàng */}
-          <div className="absolute top-3 left-3 w-11 h-11 sm:top-4.5 sm:left-4.5 sm:w-14 sm:h-14 rounded-full bg-white border-[2px] border-[#D4AF37] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
+          <div className="absolute top-3 left-3 w-14 h-14 sm:top-4.5 sm:left-4.5 sm:w-16 sm:h-16 rounded-full bg-white border-[2px] border-[#D4AF37] shadow-[0_4px_10px_rgba(0,0,0,0.14)] p-0.5 z-20 flex items-center justify-center">
             <img 
               src="/images/phuong_vien_fc.png" 
               alt="Logo CLB Phương Viên" 
@@ -145,7 +145,7 @@ export default function CertificateModal({
           </div>
 
           {/* Logo Đoàn Thanh Niên ở góc trên bên phải - Căn chỉnh khớp viền vàng */}
-          <div className="absolute top-3 right-3 w-11 h-11 sm:top-4.5 sm:right-4.5 sm:w-14 sm:h-14 rounded-full bg-white border-[2px] border-[#D4AF37] shadow-[0_3px_8px_rgba(0,0,0,0.12)] p-0.5 z-20 flex items-center justify-center">
+          <div className="absolute top-3 right-3 w-14 h-14 sm:top-4.5 sm:right-4.5 sm:w-16 sm:h-16 rounded-full bg-white border-[2px] border-[#D4AF37] shadow-[0_4px_10px_rgba(0,0,0,0.14)] p-0.5 z-20 flex items-center justify-center">
             <img 
               src="/images/doan_thanh_nien.png" 
               alt="Logo Đoàn Thanh Niên" 
@@ -200,7 +200,7 @@ export default function CertificateModal({
           </div>
 
           {/* 1. TOP HEADER SECTION */}
-          <div className="relative z-10 flex flex-col items-center pt-1.5 sm:pt-3">
+          <div className="relative z-10 flex flex-col items-center pt-5 sm:pt-8">
             <div className="relative mb-1 sm:mb-2 flex items-center justify-center">
               {/* Cành nguyệt quế vàng và ngôi sao trung tâm sang trọng */}
               <div className="relative z-10 flex items-center justify-center">
@@ -233,10 +233,10 @@ export default function CertificateModal({
               </div>
             </div>
             
-            <h4 className="text-[12px] sm:text-[14px] font-black tracking-[0.3em] text-[#D4AF37] uppercase mb-0.5 sm:mb-1 font-sans">
+            <h4 className="text-[14px] sm:text-[16px] font-black tracking-[0.3em] text-[#D4AF37] uppercase mb-1 sm:mb-1.5 font-sans">
               Bảng Vàng Danh Dự
             </h4>
-            <h2 className="text-xl sm:text-[26px] font-black tracking-wide uppercase font-sans gold-text-metallic leading-tight">
+            <h2 className="text-2xl sm:text-[32px] font-black tracking-wide uppercase font-sans gold-text-metallic leading-tight">
               Tri Ân Tấm Lòng Vàng
             </h2>
             
