@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Banknote, FileSpreadsheet, LayoutDashboard, LogOut } from "lucide-react";
+import { Banknote, FileSpreadsheet, LayoutDashboard, LogOut, Camera } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
@@ -68,6 +68,25 @@ export default function AdminDashboard() {
               Mở trực tiếp file Google Sheets để xem toàn bộ giao dịch, sửa đổi hoặc xuất file báo cáo.
             </p>
           </a>
+
+          {/* Menu 3 */}
+          <div 
+            className="group bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-purple-200 hover:-translate-y-1 transition-all duration-300 block cursor-default"
+          >
+            <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-500 transition-colors">
+              <Camera className="w-7 h-7 text-purple-600 group-hover:text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Xuất Ảnh Vinh Danh</h2>
+            <div className="text-gray-500 text-sm leading-relaxed space-y-2">
+              <p>Chụp ảnh chất lượng cao hàng loạt để đăng mạng xã hội mà không bị lỗi giao diện.</p>
+              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100 font-mono text-[10px] text-gray-700">
+                <span className="text-emerald-700 font-bold">Chạy lệnh ở Terminal local:</span>
+                <div className="mt-1 select-all bg-neutral-900 text-neutral-100 p-2 rounded">
+                  pnpm run export-certs
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
