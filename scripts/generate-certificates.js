@@ -75,6 +75,21 @@ function cleanFilename(name) {
   return name.replace(/[\\/:*?"<>|]/g, '_').trim();
 }
 
+function getDesktopPath() {
+  const homeDir = process.env.USERPROFILE || process.env.HOME;
+  if (!homeDir) return path.join(process.cwd(), 'exports');
+  
+  const standardDesktop = path.join(homeDir, 'Desktop');
+  const oneDriveDesktop = path.join(homeDir, 'OneDrive', 'Desktop');
+  
+  if (fs.existsSync(standardDesktop)) {
+    return standardDesktop;
+  } else if (fs.existsSync(oneDriveDesktop)) {
+    return oneDriveDesktop;
+  }
+  return path.join(process.cwd(), 'exports');
+}
+
 async function run() {
   console.log("\x1b[36m%s\x1b[0m", "==========================================================");
   console.log("\x1b[36m%s\x1b[0m", "   CÔNG CỤ CHỤP ẢNH VINH DANH HÀNG LOẠT (PUPPETEER)       ");
@@ -137,11 +152,8 @@ async function run() {
     process.exit(0);
   }
 
-  // 4. Tạo thư mục lưu trữ exports
-  const exportBaseDir = path.join(process.cwd(), 'exports');
-  if (!fs.existsSync(exportBaseDir)) {
-    fs.mkdirSync(exportBaseDir);
-  }
+  // 4. Tạo thư mục lưu trữ exports (ở Desktop)
+  const exportBaseDir = getDesktopPath();
 
   let dateSubFolder;
   if (targetDateInput.toLowerCase() === 'all') {
