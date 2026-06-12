@@ -13,6 +13,7 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    // Validate admin credentials and redirect to dashboard
     if (username === "admin" && password === "Huyen2609@#") {
       // Set cookie to keep logged in for 1 day
       document.cookie = "admin_auth=true; path=/; max-age=86400";
