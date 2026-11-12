@@ -1,6 +1,7 @@
 "use client";
 
-import { Calendar, Hash, Quote } from "lucide-react";
+import { Calendar, CheckCircle2, Hash, Quote, RotateCcw } from "lucide-react";
+import { CAMPAIGN_PAUSED } from "@/config/campaign";
 
 interface CertificateCardProps {
   donation?: {
@@ -10,6 +11,8 @@ interface CertificateCardProps {
     date?: string;
     category?: string;
     id?: string | number;
+    refunded?: boolean;
+    refundDate?: string;
   } | null;
   initialName?: string;
   initialAmount?: number;
@@ -26,6 +29,11 @@ export default function CertificateCard({
   const displayDate = donation?.date || new Date().toLocaleDateString("vi-VN");
   const displayCategory = donation?.category || "Cá nhân";
   const displayId = donation?.id || "202605";
+  const isRefunded = !!donation?.refunded;
+  const refundDate = donation?.refundDate || "";
+  const isPendingRefund = CAMPAIGN_PAUSED && !!donation && !isRefunded;
+  // Chọn class theo trạng thái: thẻ thường (vàng/ngọc) hoặc thẻ đã hoàn tiền (xanh/bạc)
+  const t = (normal: string, refunded: string) => (isRefunded ? refunded : normal);
 
   // Helper function to render customized premium badges for the 3 categories
   const getCategoryBadgeStyles = (category: string) => {
@@ -53,7 +61,7 @@ export default function CertificateCard({
   return (
     <div 
       id="certificate-card"
-      className="relative overflow-hidden w-full max-h-[82vh] min-h-[530px] sm:min-h-[580px] rounded-[28px] parchment-bg royal-emerald-frame flex flex-col justify-between p-5 sm:p-7 text-center text-slate-800 select-none shadow-2xl"
+      className={`relative overflow-hidden w-full max-h-[82vh] min-h-[530px] sm:min-h-[580px] rounded-[28px] ${t("parchment-bg royal-emerald-frame", "refund-bg refund-frame")} flex flex-col justify-between p-5 sm:p-7 text-center text-slate-800 select-none shadow-2xl`}
       style={{ aspectRatio: "9/16" }}
     >
       {/* Tối ưu hóa CSS để tạo hiệu ứng giấy da Canvas kết hợp lưới kỹ thuật chìm và khung viền hoàng gia nổi khối */}
@@ -87,6 +95,31 @@ export default function CertificateCard({
           image-rendering: crisp-edges;
           filter: drop-shadow(0.5px 0.5px 0px rgba(0, 50, 150, 0.25)) contrast(1.4) saturate(1.3) brightness(0.94);
         }
+        .refund-bg {
+          background-color: #F1F5FB;
+          background-image:
+            radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.96) 0%, rgba(238, 244, 252, 0.97) 55%, rgba(219, 230, 245, 0.99) 100%),
+            linear-gradient(to right, rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+            repeating-linear-gradient(-45deg, rgba(37, 99, 235, 0.025) 0px, rgba(37, 99, 235, 0.025) 1px, transparent 1px, transparent 10px);
+          background-size: auto, 24px 24px, 24px 24px, auto;
+        }
+        .refund-frame {
+          border: 6px solid #1e3a8a;
+          box-shadow:
+            0 15px 45px rgba(0, 0, 0, 0.45),
+            inset 0 0 35px rgba(96, 165, 250, 0.35);
+        }
+        .refund-inner-frame {
+          border: 3px double #94a3b8;
+        }
+        .refund-text-metallic {
+          background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 30%, #1e40af 55%, #60a5fa 80%, #1e3a8a 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: #1e3a8a;
+          filter: drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.6));
+        }
         .gold-text-metallic {
           background: linear-gradient(135deg, #a67c1e 0%, #f1d382 25%, #b8860b 50%, #f6e3a7 75%, #a67c1e 100%);
           -webkit-background-clip: text;
@@ -113,13 +146,13 @@ export default function CertificateCard({
           className="w-full h-full object-contain"
         />
       </div>
-      <svg className="absolute bottom-3 left-3 w-8 h-8 sm:bottom-4 sm:left-4 sm:w-10 sm:h-10 text-[#D4AF37]/95 scale-y-[-1]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
+      <svg className={`absolute bottom-3 left-3 w-8 h-8 sm:bottom-4 sm:left-4 sm:w-10 sm:h-10 ${t("text-[#D4AF37]/95", "text-[#64748b]")} scale-y-[-1]`} viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
         <path d="M 10 50 L 10 10 L 50 10 M 10 10 L 35 35 M 10 25 L 25 10 M 15 15 C 20 20, 20 25, 25 25 C 25 20, 20 20, 15 15 Z M 10 40 C 13 40, 15 37, 15 35 M 40 10 C 40 13, 37 15, 35 15" />
         <circle cx="10" cy="10" r="3.5" fill="currentColor" />
         <circle cx="50" cy="10" r="2.5" fill="currentColor" />
         <circle cx="10" cy="50" r="2.5" fill="currentColor" />
       </svg>
-      <svg className="absolute bottom-3 right-3 w-8 h-8 sm:bottom-4 sm:right-4 sm:w-10 sm:h-10 text-[#D4AF37]/95 scale-x-[-1] scale-y-[-1]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
+      <svg className={`absolute bottom-3 right-3 w-8 h-8 sm:bottom-4 sm:right-4 sm:w-10 sm:h-10 ${t("text-[#D4AF37]/95", "text-[#64748b]")} scale-x-[-1] scale-y-[-1]`} viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
         <path d="M 10 50 L 10 10 L 50 10 M 10 10 L 35 35 M 10 25 L 25 10 M 15 15 C 20 20, 20 25, 25 25 C 25 20, 20 20, 15 15 Z M 10 40 C 13 40, 15 37, 15 35 M 40 10 C 40 13, 37 15, 35 15" />
         <circle cx="10" cy="10" r="3.5" fill="currentColor" />
         <circle cx="50" cy="10" r="2.5" fill="currentColor" />
@@ -127,13 +160,22 @@ export default function CertificateCard({
       </svg>
       
       {/* Đường viền chỉ vàng kép hoàng gia chạy phía trong */}
-      <div className="absolute inset-[8px] inner-gold-frame rounded-[18px] pointer-events-none"></div>
+      <div className={`absolute inset-[8px] ${t("inner-gold-frame", "refund-inner-frame")} rounded-[18px] pointer-events-none`}></div>
       {/* Đường chỉ xanh ngọc lục bảo sắc nét sát sườn */}
-      <div className="absolute inset-3 border-2 border-[#0B3C26]/15 rounded-[15px] pointer-events-none"></div>
+      <div className={`absolute inset-3 border-2 ${t("border-[#0B3C26]/15", "border-[#1e3a8a]/15")} rounded-[15px] pointer-events-none`}></div>
+
+      {/* Chữ chìm "ĐÃ HOÀN TIỀN" chéo toàn thẻ */}
+      {isRefunded && (
+        <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="rotate-[-35deg] whitespace-nowrap text-[64px] sm:text-[78px] font-black tracking-[0.08em] uppercase text-[#1e3a8a]/[0.06]">
+            Đã hoàn tiền
+          </span>
+        </div>
+      )}
 
       {/* BACKGROUND SÂN BÓNG BLUEPRINT CHI TIẾT KỸ THUẬT */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-0 p-8 sm:p-10">
-        <svg className="w-full h-full text-[#D4AF37]" viewBox="0 0 100 150" fill="none" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.14">
+        <svg className={`w-full h-full ${t("text-[#D4AF37]", "text-[#3b82f6]")}`} viewBox="0 0 100 150" fill="none" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.14">
           {/* Biên ngoài */}
           <rect x="5" y="5" width="90" height="140" rx="2" />
           {/* Vạch giữa sân và vạch sút phạt */}
@@ -165,7 +207,7 @@ export default function CertificateCard({
         <div className="relative mb-1 sm:mb-2 flex items-center justify-center">
           {/* Cành nguyệt quế vàng và ngôi sao trung tâm sang trọng */}
           <div className="relative z-10 flex items-center justify-center">
-            <svg className="w-14 h-10 sm:w-[68px] sm:h-[54px] text-[#D4AF37]" viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className={`w-14 h-10 sm:w-[68px] sm:h-[54px] ${t("text-[#D4AF37]", "text-[#3b82f6]")}`} viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               {/* Cành nguyệt quế trái */}
               <path d="M 35 48 C 22 45, 12 35, 15 20 C 16 15, 20 10, 25 8" strokeWidth="2.5" />
               {/* Lá nguyệt quế trái */}
@@ -194,11 +236,11 @@ export default function CertificateCard({
           </div>
         </div>
         
-        <h4 className="text-[14px] sm:text-[16px] font-black tracking-[0.3em] text-[#D4AF37] uppercase mb-1 sm:mb-1.5 font-sans">
-          Bảng Vàng Danh Dự
+        <h4 className={`text-[14px] sm:text-[16px] font-black tracking-[0.3em] ${t("text-[#D4AF37]", "text-[#64748b]")} uppercase mb-1 sm:mb-1.5 font-sans`}>
+          {isRefunded ? "Xác Nhận Hoàn Tiền" : "Bảng Vàng Danh Dự"}
         </h4>
-        <h2 className="text-2xl sm:text-[32px] font-black tracking-wide uppercase font-sans gold-text-metallic leading-tight">
-          Tri Ân Tấm Lòng Vàng
+        <h2 className={`text-2xl sm:text-[32px] font-black tracking-wide uppercase font-sans ${t("gold-text-metallic", "refund-text-metallic")} leading-tight`}>
+          {isRefunded ? "Cảm Ơn Tấm Lòng" : "Tri Ân Tấm Lòng Vàng"}
         </h2>
         
         {/* Họa tiết phân cách vàng nhã nhặn kèm ngôi sao vàng chính giúp */}
@@ -209,17 +251,27 @@ export default function CertificateCard({
           </svg>
           <div className="h-[1.5px] bg-gradient-to-l from-transparent to-[#D4AF37] flex-1"></div>
         </div>
+
+        {/* Dải ruy băng xác nhận đã hoàn tiền */}
+        {isRefunded && (
+          <div className="mt-2 sm:mt-3 inline-flex items-center gap-1.5 px-4 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-[#1e3a8a] via-[#2563eb] to-[#1e3a8a] text-white border border-[#D4AF37] shadow-[0_3px_10px_rgba(30,58,138,0.35)]">
+            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="text-[10px] sm:text-[12px] font-black tracking-[0.18em] uppercase">
+              Đã hoàn trả 100%{refundDate ? ` · ${refundDate}` : ""}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* 2. MIDDLE CONTENT SECTION - Cân đối, khoảng cách cực kỳ hài hòa */}
       <div className="relative z-10 flex flex-col justify-center my-auto px-1 gap-1.5 sm:gap-2.5">
         <p className="text-[#0B3C26]/80 text-[11px] sm:text-[13px] font-bold italic tracking-wide">
-          BQL Sân bóng Phương Viên trân trọng vinh danh và tri ân:
+          {isRefunded ? "BQL Sân bóng Phương Viên trân trọng cảm ơn và đã hoàn trả cho:" : "BQL Sân bóng Phương Viên trân trọng vinh danh và tri ân:"}
         </p>
         
         {/* TÊN NGƯỜI ĐÓNG GÓP - Tải bằng Font Serif Playfair Display cực kỳ rõ nét, uy nghiêm */}
         <div className="px-1 py-0.5">
-          <h1 className="text-xl sm:text-2xl md:text-[28px] font-black tracking-wide text-[#960018] uppercase font-cinzel leading-none drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] break-words max-w-[90%] mx-auto">
+          <h1 className={`text-xl sm:text-2xl md:text-[28px] font-black tracking-wide ${t("text-[#960018]", "text-[#1e3a8a]")} uppercase font-cinzel leading-none drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] break-words max-w-[90%] mx-auto`}>
             {displayName}
           </h1>
           
@@ -241,27 +293,65 @@ export default function CertificateCard({
         </div>
 
         {/* KHỐI SỐ TIỀN ỦNG HỘ - Thiết kế lớn hơn, font không chân rõ ràng và uy nghiêm */}
-        <div className="relative px-3 py-2 sm:px-5 sm:py-3.5 rounded-xl bg-gradient-to-b from-[#D4AF37]/14 to-[#D4AF37]/6 border-2 border-double border-[#D4AF37] shadow-[0_5px_18px_rgba(212,175,55,0.14),inset_0_1px_1px_rgba(255,255,255,0.8)] max-w-[320px] mx-auto w-full flex flex-col items-center justify-center">
-          <span className="text-[9.5px] sm:text-[11px] font-extrabold text-[#b8860b] tracking-widest uppercase mb-0.5 sm:mb-1">
-            Số Tiền Ủng Hộ
-          </span>
-          <h3 className="text-2xl sm:text-[30px] font-black tracking-wide font-sans text-[#0B3C26] leading-none drop-shadow-[0_1.5px_2px_rgba(255,255,255,0.95)]">
-            +{displayAmount.toLocaleString('vi-VN')} VND
-          </h3>
-        </div>
+        {isRefunded ? (
+          <div className="relative px-3 py-2 sm:px-5 sm:py-3 rounded-xl bg-gradient-to-b from-[#2563eb]/12 to-[#2563eb]/5 border-2 border-double border-[#2563eb]/70 shadow-[0_5px_18px_rgba(37,99,235,0.15),inset_0_1px_1px_rgba(255,255,255,0.8)] max-w-[320px] mx-auto w-full flex flex-col items-center justify-center">
+            <span className="text-[9.5px] sm:text-[11px] font-extrabold text-[#1d4ed8] tracking-widest uppercase mb-0.5 sm:mb-1">
+              Số Tiền Đã Hoàn Trả
+            </span>
+            <h3 className="flex items-center gap-1.5 text-2xl sm:text-[30px] font-black tracking-wide font-sans text-[#1e3a8a] leading-none">
+              <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7 text-[#2563eb]" />
+              {displayAmount.toLocaleString('vi-VN')} VND
+            </h3>
+            <span className="mt-1 text-[9px] sm:text-[10px] font-semibold text-[#5c7063]">
+              Ủng hộ ngày {displayDate} · Hoàn đủ{refundDate ? ` ngày ${refundDate}` : ""}
+            </span>
+
+          </div>
+        ) : (
+          <div className="relative px-3 py-2 sm:px-5 sm:py-3.5 rounded-xl bg-gradient-to-b from-[#D4AF37]/14 to-[#D4AF37]/6 border-2 border-double border-[#D4AF37] shadow-[0_5px_18px_rgba(212,175,55,0.14),inset_0_1px_1px_rgba(255,255,255,0.8)] max-w-[320px] mx-auto w-full flex flex-col items-center justify-center">
+            <span className="text-[9.5px] sm:text-[11px] font-extrabold text-[#b8860b] tracking-widest uppercase mb-0.5 sm:mb-1">
+              Số Tiền Ủng Hộ
+            </span>
+            <h3 className="text-2xl sm:text-[30px] font-black tracking-wide font-sans text-[#0B3C26] leading-none drop-shadow-[0_1.5px_2px_rgba(255,255,255,0.95)]">
+              +{displayAmount.toLocaleString('vi-VN')} VND
+            </h3>
+            {isPendingRefund && (
+              <span className="mt-1.5 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-amber-800 text-[9.5px] sm:text-[10.5px] font-bold">
+                <RotateCcw className="w-2.5 h-2.5" />
+                Đang chờ hoàn tiền
+              </span>
+            )}
+          </div>
+        )}
 
         {/* HỘP LỜI TRI ÂN CỦA BÀ CON LÀNG PHƯƠNG VIÊN */}
-        <div className="relative px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl bg-[#FDFBF7]/70 border border-[#D4AF37]/35 max-w-[320px] mx-auto w-full min-h-[46px] sm:min-h-[56px] flex flex-col justify-center shadow-[inset_0_1.5px_4px_rgba(0,0,0,0.03)] backdrop-blur-xs">
+        <div className={`relative px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl border ${isRefunded ? "bg-[#eff6ff]/80 border-[#2563eb]/30" : "bg-[#FDFBF7]/70 border-[#D4AF37]/35"} max-w-[320px] mx-auto w-full min-h-[46px] sm:min-h-[56px] flex flex-col justify-center shadow-[inset_0_1.5px_4px_rgba(0,0,0,0.03)] backdrop-blur-xs`}>
           <Quote className="absolute -top-2 -left-1 w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] text-[#D4AF37]/45 rotate-180" />
-          <p className="text-[11.5px] sm:text-[13.5px] text-[#2c3e35] leading-relaxed font-semibold italic font-cormorant px-1">
-            {displayMessage ? `"${displayMessage}"` : `"Bà con nhân dân làng Phương Viên xin gửi lời cảm ơn chân thành và sâu sắc nhất đến Quý Mạnh Thường Quân đã chung sức đồng lòng, tài trợ kinh phí xây dựng Sân cỏ nhân tạo quê hương!"`}
+          <p className={`text-[11.5px] sm:text-[13.5px] leading-relaxed font-semibold italic font-cormorant px-1 ${isRefunded ? "text-[#1e3a8a]" : "text-[#2c3e35]"}`}>
+            {isRefunded
+              ? `"Dự án tạm dừng, BQL đã hoàn trả đầy đủ số tiền về tài khoản của Quý vị. Xin chân thành cảm ơn tấm lòng đã dành cho sân bóng quê hương Phương Viên!"`
+              : displayMessage ? `"${displayMessage}"` : `"Bà con nhân dân làng Phương Viên xin gửi lời cảm ơn chân thành và sâu sắc nhất đến Quý Mạnh Thường Quân đã chung sức đồng lòng, tài trợ kinh phí xây dựng Sân cỏ nhân tạo quê hương!"`}
           </p>
           <Quote className="absolute -bottom-2 -right-1 w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] text-[#D4AF37]/45" />
         </div>
+
+        {/* Con dấu lớn "ĐÃ HOÀN TIỀN" */}
+        {isRefunded && (
+          <div className="flex justify-center mt-1 sm:mt-2 pointer-events-none select-none">
+            <div className="rotate-[-6deg] rounded-lg border-[3px] border-[#b91c1c] p-[2px] bg-[#FDFBF7]/85 shadow-md opacity-90">
+              <div className="rounded-[5px] border border-[#b91c1c] px-4 py-1 sm:px-5 sm:py-1.5 text-center text-[#b91c1c]">
+                <div className="text-[17px] sm:text-[21px] font-black tracking-[0.14em] uppercase leading-none">Đã hoàn tiền</div>
+                <div className="text-[7px] sm:text-[8px] font-extrabold tracking-[0.2em] uppercase leading-none mt-1">
+                  BQL Sân bóng Phương Viên{refundDate ? ` · ${refundDate}` : ""}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 3. FOOTER SECTION - Bố cục đối xứng hai bên cực kỳ gọn gàng và thoáng đãng */}
-      <div className="relative z-10 border-t border-[#D4AF37]/35 pt-2 sm:pt-3.5 flex items-end justify-between px-0.5">
+      <div className={`relative z-10 border-t ${t("border-[#D4AF37]/35", "border-[#94a3b8]/50")} pt-2 sm:pt-3.5 flex items-end justify-between px-0.5`}>
         {/* Thông tin mã vinh danh */}
         <div className="text-left flex flex-col gap-0.5 shrink-0 pb-1">
           <p className="text-[10.5px] font-black text-[#0B3C26] tracking-widest uppercase font-cinzel">

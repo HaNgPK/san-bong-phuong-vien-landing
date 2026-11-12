@@ -15,6 +15,8 @@ interface CertificateModalProps {
     date?: string;
     category?: string;
     id?: string | number;
+    refunded?: boolean;
+    refundDate?: string;
   } | null;
   initialName?: string;
   initialAmount?: number;

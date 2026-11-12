@@ -13,6 +13,8 @@ function CertificateRenderContent() {
   const category = searchParams.get("category") || "Cá nhân";
   const date = searchParams.get("date") || "";
   const id = searchParams.get("id") || "";
+  const refunded = searchParams.get("refunded") === "1";
+  const refundDate = searchParams.get("refundDate") || "";
 
   const donation = {
     name,
@@ -20,7 +22,9 @@ function CertificateRenderContent() {
     message,
     category,
     date,
-    id
+    id,
+    refunded,
+    refundDate
   };
 
   return (
