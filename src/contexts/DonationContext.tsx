@@ -19,6 +19,9 @@ export interface Donation {
   name: string;
   message: string;
   amount: number;
+  // Cột H "Hoàn tiền" (ghi "Đã hoàn" khi đã chuyển trả) và cột I "Ngày hoàn" trong Sheet
+  refunded: boolean;
+  refundDate: string;
 }
 
 export interface DonorRank extends Donation {
@@ -28,6 +31,8 @@ export interface DonorRank extends Donation {
 interface DonationContextType {
   donations: Donation[];
   currentRaised: number;
+  refundedCount: number;
+  refundedAmount: number;
   fundingGoal: number;
   donorsBusiness: DonorRank[];
   donorsTeam: DonorRank[];
@@ -83,6 +88,9 @@ export function DonationProvider({ children, initialCsvText }: { children: React
   }, []);
 
   const currentRaised = donations.reduce((sum, d) => sum + d.amount, 0);
+  const refundedDonations = donations.filter((d) => d.refunded);
+  const refundedCount = refundedDonations.length;
+  const refundedAmount = refundedDonations.reduce((sum, d) => sum + d.amount, 0);
 
   const categoryTotals = donations.reduce((acc, current) => {
     const cat = current.category || 'Khác';
@@ -141,6 +149,8 @@ export function DonationProvider({ children, initialCsvText }: { children: React
       value={{
         donations,
         currentRaised,
+        refundedCount,
+        refundedAmount,
         fundingGoal: FUNDING_GOAL,
         donorsBusiness,
         donorsTeam,
@@ -202,6 +212,13 @@ function parseDateString(dateStr: string): number {
   return isNaN(parsed) ? 0 : parsed;
 }
 
+// Chấp nhận "Đã hoàn", "Da hoan", "x", "✓", "TRUE" (ô checkbox) ở cột H là đã hoàn tiền
+function isRefundedValue(raw: string | undefined): boolean {
+  const v = (raw || "").trim().toLowerCase();
+  if (!v) return false;
+  return ["x", "✓", "✔", "true", "1", "có", "co", "yes"].includes(v) || /(đã|da)\s*hoàn|(đã|da)\s*hoan/.test(v);
+}
+
 function parseCSV(text: string): Donation[] {
   const lines = text.split("\n");
   const result: Donation[] = [];
@@ -229,6 +246,8 @@ function parseCSV(text: string): Donation[] {
         name: row[3] || "Ẩn danh",
         message: row[4] || "",
         amount: amount,
+        refunded: isRefundedValue(row[7]),
+        refundDate: (row[8] || "").trim(),
       });
     }
   }

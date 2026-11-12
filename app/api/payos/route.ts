@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { CAMPAIGN_PAUSED } from "@/config/campaign";
 
 export async function POST(req: NextRequest) {
+  if (CAMPAIGN_PAUSED) {
+    return NextResponse.json(
+      { error: "Dự án đã tạm dừng nhận ủng hộ và đang hoàn tiền." },
+      { status: 410 }
+    );
+  }
+
   try {
     const body = await req.json();
     const { amount, description, returnUrl, cancelUrl } = body;

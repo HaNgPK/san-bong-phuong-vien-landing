@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { Heart, MapPin, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, MapPin, ArrowRight, ChevronLeft, ChevronRight, RotateCcw, PauseCircle } from "lucide-react";
+import { RefundProgress } from "./RefundStatus";
+import { CAMPAIGN_PAUSED } from "@/config/campaign";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/format";
 import { useDonations } from "@/contexts/DonationContext";
@@ -109,8 +111,15 @@ export default function HeroSection() {
 
       <div className="relative z-10 container px-4 mx-auto flex flex-col items-center text-center">
         
-        <div className="inline-flex items-center rounded-full bg-emerald-800/50 px-4 py-1.5 text-sm font-medium text-emerald-100 mb-6 border border-emerald-700/50">
-          <MapPin className="w-4 h-4 mr-2 text-emerald-400" /> Thôn Phương Viên
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+          <div className="inline-flex items-center rounded-full bg-emerald-800/50 px-4 py-1.5 text-sm font-medium text-emerald-100 border border-emerald-700/50">
+            <MapPin className="w-4 h-4 mr-2 text-emerald-400" /> Thôn Phương Viên
+          </div>
+          {CAMPAIGN_PAUSED && (
+            <div className="inline-flex items-center rounded-full bg-red-600 px-4 py-1.5 text-sm font-black uppercase tracking-wider text-white shadow-lg ring-2 ring-red-300/50">
+              <PauseCircle className="w-4 h-4 mr-2" /> Đã tạm dừng · Đang hoàn tiền
+            </div>
+          )}
         </div>
 
         <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 uppercase tracking-tight leading-normal md:leading-snug">
@@ -262,7 +271,9 @@ export default function HeroSection() {
           <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-teal-100 rounded-full blur-3xl opacity-30"></div>
 
           <div className="relative z-10 flex flex-col items-center mb-6 mt-2">
-            <p className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-3">TỔNG SỐ TIỀN ĐÃ CHUNG TAY</p>
+            <p className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-3">
+              {CAMPAIGN_PAUSED ? "TỔNG SỐ TIỀN SẼ HOÀN LẠI" : "TỔNG SỐ TIỀN ĐÃ CHUNG TAY"}
+            </p>
             <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 drop-shadow-sm mb-2">
               {formatCurrency(displayAmount > 0 ? displayAmount : currentRaised)}
             </h2>
@@ -272,6 +283,12 @@ export default function HeroSection() {
             </div>
           </div>
 
+          {CAMPAIGN_PAUSED ? (
+            <div className="relative z-10 space-y-3">
+              <p className="text-center text-sm md:text-base font-bold text-red-600 uppercase tracking-wider">Tiến độ hoàn tiền</p>
+              <RefundProgress />
+            </div>
+          ) : (
           <div className="relative z-10 space-y-3">
             <div className="flex justify-between text-sm md:text-base font-bold text-gray-700">
               <span className="flex items-center gap-1.5">
@@ -290,15 +307,26 @@ export default function HeroSection() {
               </div>
             </div>
           </div>
+          )}
 
           <div className="relative z-10 mt-8 flex justify-center">
-            <Button 
-              size="lg" 
-              className="w-full md:w-4/5 px-8 bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 bg-[length:200%_auto] hover:bg-right text-white rounded-2xl h-16 md:h-20 text-xl md:text-2xl font-black shadow-[0_10px_40px_-10px_rgba(16,185,129,0.5)] transition-all hover:-translate-y-1 animate-pulse"
-              onClick={() => document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              <Heart className="mr-3 w-7 h-7 md:w-8 md:h-8 fill-white/20 animate-bounce" /> TIẾN HÀNH CHUNG SỨC
-            </Button>
+            {CAMPAIGN_PAUSED ? (
+              <Button
+                size="lg"
+                className="w-full md:w-4/5 px-8 bg-amber-500 hover:bg-amber-600 text-amber-950 rounded-2xl h-16 md:h-20 text-lg md:text-2xl font-black shadow-lg transition-all"
+                onClick={() => document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                <RotateCcw className="mr-3 w-6 h-6 md:w-7 md:h-7" /> XEM THÔNG BÁO HOÀN TIỀN
+              </Button>
+            ) : (
+              <Button
+                size="lg"
+                className="w-full md:w-4/5 px-8 bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 bg-[length:200%_auto] hover:bg-right text-white rounded-2xl h-16 md:h-20 text-xl md:text-2xl font-black shadow-[0_10px_40px_-10px_rgba(16,185,129,0.5)] transition-all hover:-translate-y-1 animate-pulse"
+                onClick={() => document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                <Heart className="mr-3 w-7 h-7 md:w-8 md:h-8 fill-white/20 animate-bounce" /> TIẾN HÀNH CHUNG SỨC
+              </Button>
+            )}
           </div>
         </div>
 

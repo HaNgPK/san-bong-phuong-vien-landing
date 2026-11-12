@@ -22,6 +22,8 @@ import { Button } from "@/components/ui/button";
 import { useDonations } from "@/contexts/DonationContext";
 import { formatCurrency, getCategoryColor } from "@/lib/format";
 import CertificateModal from "./CertificateModal";
+import { RefundBadge, RefundProgress } from "./RefundStatus";
+import { CAMPAIGN_PAUSED } from "@/config/campaign";
 
 function parseDateString(dateStr: string): number {
   if (!dateStr) return 0;
@@ -102,11 +104,17 @@ export default function TransparencySection() {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Sao Kê Đóng Góp
             </h2>
-            <p className="text-gray-500 mb-4 md:mb-0 flex flex-wrap items-center gap-1.5 justify-center md:justify-start">
-              <span>Cập nhật tự động mọi khoản thu</span>
-              <span className="hidden sm:inline-block w-1.5 h-1.5 bg-emerald-300 rounded-full"></span>
-              <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded text-xs animate-pulse">🌟 Nhấp dòng sao kê để xem Vinh Danh</span>
-            </p>
+            {CAMPAIGN_PAUSED ? (
+              <p className="text-gray-500 mb-4 md:mb-0">
+                Danh sách các khoản ủng hộ và <span className="font-semibold text-red-600">trạng thái hoàn tiền</span> của từng khoản.
+              </p>
+            ) : (
+              <p className="text-gray-500 mb-4 md:mb-0 flex flex-wrap items-center gap-1.5 justify-center md:justify-start">
+                <span>Cập nhật tự động mọi khoản thu</span>
+                <span className="hidden sm:inline-block w-1.5 h-1.5 bg-emerald-300 rounded-full"></span>
+                <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded text-xs animate-pulse">🌟 Nhấp dòng sao kê để xem Vinh Danh</span>
+              </p>
+            )}
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
             <Button
@@ -143,6 +151,12 @@ export default function TransparencySection() {
             </div>
           </div>
         </div>
+
+        {CAMPAIGN_PAUSED && (
+          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 md:p-5">
+            <RefundProgress />
+          </div>
+        )}
 
         <CertificateModal
           isOpen={isModalOpen}
@@ -213,6 +227,11 @@ export default function TransparencySection() {
                       )}
                     </div>
                   </TableHead>
+                  {CAMPAIGN_PAUSED && (
+                    <TableHead className="w-[150px] font-bold text-gray-700 bg-gray-50 text-center">
+                      Hoàn tiền
+                    </TableHead>
+                  )}
                   {/* Ẩn cột hành động Tạo Chứng Nhận */}
                   {/* <TableHead className="w-[50px] bg-gray-50"></TableHead> */}
                 </TableRow>
@@ -246,9 +265,14 @@ export default function TransparencySection() {
                           <span className="text-gray-300">---</span>
                         )}
                       </TableCell>
-                      <TableCell className="text-right font-bold text-emerald-600 text-lg">
+                      <TableCell className={`text-right font-bold text-lg ${CAMPAIGN_PAUSED && donation.refunded ? "text-gray-400 line-through" : "text-emerald-600"}`}>
                         +{formatCurrency(donation.amount)}
                       </TableCell>
+                      {CAMPAIGN_PAUSED && (
+                        <TableCell className="text-center">
+                          <RefundBadge refunded={donation.refunded} refundDate={donation.refundDate} />
+                        </TableCell>
+                      )}
                       {/* Ẩn chức năng Tạo Chứng Nhận trên từng dòng giao dịch */}
                       {/* <TableCell>
                         <Button
@@ -306,9 +330,14 @@ export default function TransparencySection() {
                         {donation.category}
                       </span>
                     </div>
-                    <span className="font-black text-emerald-600 text-lg text-right whitespace-nowrap">
-                      +{formatCurrency(donation.amount)}
-                    </span>
+                    <div className="flex flex-col items-end gap-1.5">
+                      <span className={`font-black text-lg text-right whitespace-nowrap ${CAMPAIGN_PAUSED && donation.refunded ? "text-gray-400 line-through" : "text-emerald-600"}`}>
+                        +{formatCurrency(donation.amount)}
+                      </span>
+                      {CAMPAIGN_PAUSED && (
+                        <RefundBadge refunded={donation.refunded} refundDate={donation.refundDate} />
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-2 mt-1">

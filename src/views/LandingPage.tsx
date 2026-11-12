@@ -12,6 +12,10 @@ import TransparencySection from "../components/landing/TransparencySection";
 import BudgetTimelineSection from "../components/landing/BudgetTimelineSection";
 import SchedulePlanSection from "../components/landing/SchedulePlanSection";
 import PaymentSection from "../components/landing/PaymentSection";
+import RefundBanner from "../components/landing/RefundBanner";
+import RefundNoticeSection from "../components/landing/RefundNoticeSection";
+import RefundNoticeModal from "../components/landing/RefundNoticeModal";
+import { CAMPAIGN_PAUSED } from "../config/campaign";
 import Footer from "../components/landing/Footer";
 import ScrollToTop from "../components/ui/ScrollToTop";
 import { motion, Variants } from "framer-motion";
@@ -40,8 +44,10 @@ const ScrollReveal = ({ children }: { children: React.ReactNode }) => (
 export default function LandingPage() {
   return (
     <DonationProvider>
-      <div className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-emerald-200 overflow-x-hidden">
+      <div className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-emerald-200 overflow-x-clip">
         <Header />
+        {CAMPAIGN_PAUSED && <RefundBanner />}
+        {CAMPAIGN_PAUSED && <RefundNoticeModal />}
         <HeroSection />
         <SponsorMarquee />
 
@@ -49,9 +55,11 @@ export default function LandingPage() {
           <MotivationSection />
         </ScrollReveal>
 
-        <ScrollReveal>
-          <QuickDonateSection />
-        </ScrollReveal>
+        {!CAMPAIGN_PAUSED && (
+          <ScrollReveal>
+            <QuickDonateSection />
+          </ScrollReveal>
+        )}
 
         <ScrollReveal>
           <FootballFieldSection />
@@ -78,7 +86,7 @@ export default function LandingPage() {
         </ScrollReveal>
         
         <ScrollReveal>
-          <PaymentSection />
+          {CAMPAIGN_PAUSED ? <RefundNoticeSection /> : <PaymentSection />}
         </ScrollReveal>
         
         <Footer />
